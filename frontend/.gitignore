@@ -1,0 +1,141 @@
+# ==================================================================
+# FRONTEND (REACT / VITE) .GITIGNORE
+# ==================================================================
+# For React application built with Vite
+# Last updated: 2026-02-08
+
+# ==================== DEPENDENCIES ====================
+
+# Node modules
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ==================== BUILD OUTPUT ====================
+
+# Vite build output
+dist/
+dist-ssr/
+build/
+
+# Production build
+/build
+
+# ==================== ENVIRONMENT VARIABLES ====================
+
+# Local environment files
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ==================== LOGS ====================
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==================== TESTING ====================
+
+# Coverage directory
+coverage/
+*.lcov
+.nyc_output
+
+# Test results
+test-results/
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+
+# ==================== IDE / EDITOR ====================
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# WebStorm
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==================== OS FILES ====================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ==================== VITE SPECIFIC ====================
+
+# Vite cache
+.vite/
+*.local
+
+# ==================== MISCELLANEOUS ====================
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.cache/
+
+# Backup files
+*.bak
+*.old
+*.swp
+*~
+
+# Debug files
+.vscode/launch.json
+
+# Package lock (optional - see notes below)
+# package-lock.json  # Uncomment if using Yarn exclusively
+yarn.lock          # Uncomment if using npm exclusively
+
+# End of frontend .gitignore

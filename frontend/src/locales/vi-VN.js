@@ -56,6 +56,7 @@ export const viVN = {
       },
       phone: 'Số điện thoại',
       phonePlaceholder: 'vd: 0912345678',
+      phoneOptional: '(tùy chọn)',
       address: 'Địa chỉ',
       addressPlaceholder: 'Nhập địa chỉ đầy đủ',
     },

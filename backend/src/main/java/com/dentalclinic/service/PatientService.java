@@ -1,13 +1,11 @@
 package com.dentalclinic.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dentalclinic.exception.DuplicatePhoneException;
 import com.dentalclinic.exception.ResourceNotFoundException;
 import com.dentalclinic.model.Patient;
 import com.dentalclinic.repository.PatientRepository;
@@ -70,12 +68,6 @@ public class PatientService {
 	 * @throws DuplicatePhoneException if a patient with this phone already exists
 	 */
 	public Patient createPatient(Patient patient) {
-		// FIX FOR TEST 1.5: Check for duplicate phone number BEFORE saving
-		Optional<Patient> existingPatient = patientRepository.findByPhone(patient.getPhone());
-		if (existingPatient.isPresent()) {
-			throw new DuplicatePhoneException("A patient with this phone number already exists");
-		}
-
 		return patientRepository.save(patient);
 	}
 
@@ -102,15 +94,6 @@ public class PatientService {
 	 */
 	public Patient updatePatient(Long id, Patient patientDetails) {
 		Patient patient = getPatientById(id);
-
-		// FIX FOR TEST 1.5: Check if phone number is being changed
-		if (!patient.getPhone().equals(patientDetails.getPhone())) {
-			// Check if the new phone number already exists for a different patient
-			Optional<Patient> duplicatePhone = patientRepository.findByPhone(patientDetails.getPhone());
-			if (duplicatePhone.isPresent() && !duplicatePhone.get().getId().equals(id)) {
-				throw new DuplicatePhoneException("A patient with this phone number already exists");
-			}
-		}
 
 		// Update all editable fields
 		patient.setName(patientDetails.getName());

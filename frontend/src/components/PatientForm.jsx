@@ -198,9 +198,7 @@ function PatientForm({
       newErrors.gender = t('patient.validation.genderRequired');
     }
 
-    if (!formData.phone.trim()) {
-      newErrors.phone = t('patient.validation.phoneRequired');
-    } else if (!isValidVietnamesePhone(formData.phone.trim())) {
+    if (formData.phone.trim() && !isValidVietnamesePhone(formData.phone.trim())) {
       newErrors.phone = t('patient.validation.phoneInvalid');
     }
 
@@ -429,7 +427,7 @@ function PatientForm({
       {/* ── Phone ───────────────────────────────────────── */}
       <div className="form-group">
         <label htmlFor="phone" className="form-label">
-          {t('patient.fields.phone')} <span className="required">*</span>
+          {t('patient.fields.phone')} <span className="optional">{t('patient.fields.phoneOptional')}</span>
         </label>
         <input
           type="tel"

@@ -1,0 +1,4 @@
+username: postgres
+password: 123
+port: 5432
+locale: vi-VN

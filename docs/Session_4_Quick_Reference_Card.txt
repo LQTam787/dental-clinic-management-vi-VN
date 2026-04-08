@@ -1,0 +1,215 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    SESSION 4 QUICK REFERENCE CARD                             ║
+║                   Dental Clinic Management - Frontend Setup                   ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  SETUP COMMANDS                                                               ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  Create Project:                                                              ║
+║    npm create vite@latest dental-clinic-frontend -- --template react         ║
+║    cd dental-clinic-frontend                                                  ║
+║    npm install                                                                ║
+║    npm install axios                                                          ║
+║                                                                               ║
+║  Run Development:                                                             ║
+║    npm run dev                     → Start frontend (port 5173)               ║
+║    Ctrl+C                          → Stop server                              ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  PROJECT STRUCTURE                                                            ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  dental-clinic-frontend/                                                      ║
+║  ├── src/                                                                     ║
+║  │   ├── components/               ← Create this folder                      ║
+║  │   │   └── AppointmentTable.jsx  ← Create this file                        ║
+║  │   ├── services/                 ← Create this folder                      ║
+║  │   │   └── api.js                ← Create this file                        ║
+║  │   ├── App.jsx                   ← Modify this file                        ║
+║  │   └── App.css                   ← Modify this file                        ║
+║  └── package.json                                                             ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  VERIFICATION CHECKLIST                                                       ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  Before Starting:                                                             ║
+║    ☐ Backend running on http://localhost:8080                                ║
+║    ☐ Can access: http://localhost:8080/api/appointments/with-patients        ║
+║    ☐ Node.js installed: node -v shows v18+ or higher                         ║
+║    ☐ VS Code with React extensions installed                                 ║
+║                                                                               ║
+║  After Setup:                                                                 ║
+║    ☐ Frontend runs: npm run dev works                                        ║
+║    ☐ Browser shows page at http://localhost:5173                             ║
+║    ☐ No CORS errors in console (F12)                                         ║
+║    ☐ Data loads from backend                                                 ║
+║    ☐ Table displays appointments                                             ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  FILES TO CREATE                                                              ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  1. src/services/api.js           → API configuration & endpoints            ║
+║  2. src/components/AppointmentTable.jsx → Table component                    ║
+║  3. Update src/App.jsx            → Main component with data fetching        ║
+║  4. Update src/App.css            → Professional styling                     ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  TESTING URLS                                                                 ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  Frontend:  http://localhost:5173                                            ║
+║  Backend:   http://localhost:8080/api/appointments/with-patients             ║
+║  Verify:    F12 → Console (no errors)                                        ║
+║             F12 → Network (200 OK status)                                    ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  TROUBLESHOOTING QUICK FIXES                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  Problem                    → Solution                                        ║
+║  ──────────────────────────────────────────────────────────────────────────   ║
+║  CORS error                 → Check backend CorsConfig.java                  ║
+║                               Allow origin: http://localhost:5173             ║
+║                               Restart backend                                 ║
+║                                                                               ║
+║  No data showing            → 1. Check backend is running                    ║
+║                               2. Test API in browser directly                 ║
+║                               3. Check console for errors (F12)               ║
+║                                                                               ║
+║  Port 5173 in use           → npm run dev -- --port 5174                     ║
+║                                                                               ║
+║  Module not found           → npm install                                    ║
+║                               Check import paths match filenames              ║
+║                                                                               ║
+║  Styling not applied        → Ctrl+Shift+R (hard refresh)                    ║
+║                               Verify App.css imported in App.jsx              ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  KEY CONCEPTS                                                                 ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  • React Component: Reusable UI building block                               ║
+║  • Props: Data passed from parent to child component                         ║
+║  • State: Component's internal data that can change                          ║
+║  • useEffect: Hook for side effects (API calls, etc.)                        ║
+║  • axios: Library for HTTP requests                                          ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  COMPONENT STRUCTURE PATTERN                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  import React, { useState, useEffect } from 'react';                         ║
+║                                                                               ║
+║  function ComponentName({ props }) {                                          ║
+║    const [state, setState] = useState(initialValue);                         ║
+║                                                                               ║
+║    useEffect(() => {                                                          ║
+║      // Side effects (API calls, subscriptions)                              ║
+║    }, [dependencies]);                                                        ║
+║                                                                               ║
+║    return (                                                                   ║
+║      <div>                                                                    ║
+║        {/* JSX here */}                                                       ║
+║      </div>                                                                   ║
+║    );                                                                         ║
+║  }                                                                            ║
+║                                                                               ║
+║  export default ComponentName;                                                ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  BROWSER DEVELOPER TOOLS (F12)                                                ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  Console Tab:    View console.log() output and errors                        ║
+║  Network Tab:    See API requests and responses                              ║
+║  Elements Tab:   Inspect HTML structure and CSS                              ║
+║                                                                               ║
+║  Useful shortcuts:                                                            ║
+║    F12           → Open DevTools                                             ║
+║    Ctrl+Shift+R  → Hard refresh (clear cache)                                ║
+║    F5            → Normal refresh                                            ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  VS CODE SNIPPETS (with ES7+ React extension)                                ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  rafce + Tab     → Arrow function component with export                      ║
+║  useState + Tab  → useState hook                                             ║
+║  useEffect + Tab → useEffect hook                                            ║
+║  imrs + Tab      → import React, { useState } from 'react'                   ║
+║  clg + Tab       → console.log()                                             ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  DATA FLOW DIAGRAM                                                            ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║                                                                               ║
+║   Browser (localhost:5173)                                                    ║
+║        ↓                                                                      ║
+║   React App (App.jsx)                                                         ║
+║        ↓                                                                      ║
+║   API Service (api.js)                                                        ║
+║        ↓ HTTP GET                                                             ║
+║   Spring Boot Backend (localhost:8080)                                        ║
+║        ↓ SQL Query                                                            ║
+║   PostgreSQL Database                                                         ║
+║        ↓ Results                                                              ║
+║   JSON Response                                                               ║
+║        ↓                                                                      ║
+║   React State Update                                                          ║
+║        ↓                                                                      ║
+║   AppointmentTable Component                                                  ║
+║        ↓                                                                      ║
+║   Display in Browser                                                          ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  SESSION 4 SUCCESS CRITERIA                                                   ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  ✓ React project created and dependencies installed                          ║
+║  ✓ Folder structure organized (components/, services/)                       ║
+║  ✓ API service layer configured (api.js)                                     ║
+║  ✓ AppointmentTable component created                                        ║
+║  ✓ App.jsx updated to fetch and display data                                 ║
+║  ✓ Professional styling applied (App.css)                                    ║
+║  ✓ Frontend communicates with backend successfully                           ║
+║  ✓ Data displays in table (or "No appointments found")                       ║
+║  ✓ No console errors                                                         ║
+║  ✓ Ready for Session 5 (Search & Filter)                                     ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  REMEMBER                                                                     ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  • Keep backend running while developing frontend                            ║
+║  • Check console (F12) for errors frequently                                 ║
+║  • Save files (Ctrl+S) - Vite auto-reloads on save                           ║
+║  • Test in browser after each change                                         ║
+║  • Use console.log() liberally for debugging                                 ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  ESTIMATED TIME                                                               ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  Project Setup:        15 minutes                                            ║
+║  API Service:          15 minutes                                            ║
+║  Components:           15 minutes                                            ║
+║  Testing:              15 minutes                                            ║
+║  Sample Data (opt):    10 minutes                                            ║
+║  ──────────────────────────────                                              ║
+║  Total:                1-1.5 hours                                           ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  NEXT SESSION (Session 5)                                                     ║
+║  ─────────────────────────────────────────────────────────────────────────    ║
+║  • Search Bar component                                                       ║
+║  • Treatment Filter checkboxes                                               ║
+║  • Dynamic filtering logic                                                   ║
+║  • Debouncing for performance                                                ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+Print this card or keep it visible while working on Session 4!

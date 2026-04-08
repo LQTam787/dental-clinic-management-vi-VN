@@ -1,0 +1,36 @@
+- tính tổng tiền một tháng tự động
+- tính tổng tiền một năm tự động
+
+- xử lý thông tin giá tiền trong bảng lượt hẹn
+- tính tổng và hiển thị theo tháng trong giao diện chính
+- đặt lại về 0 vào mùng 1 hàng tháng
+- khi đặt lại, cộng tổng tháng trước vào tổng của năm
+- tạo một bảng mới hiển thị tổng các tháng trong năm và tổng của năm
+
+- cần một bảng mới trong csdl để lưu tổng tiền hàng tháng
+- cần một bảng mới trong giao diện người dùng để hiển thị danh sách bệnh nhân trong csdl (trước đó không được áp dụng để đảm bảo giao diện hiển thị một bảng, nhưng với các bảng mới, cân có các nút tab để di chuyển giữa các bảng và nhiều bảng có thể hiển thị trên giao diện và do đó không còn lý do trốn tránh nữa)
+- cần một bảng mới trong giao diện người dùng để hiển thị tổng tiền hàng tháng và hàng năm
+- cần các nút tab để chuyển giữa các bảng trong giao diện người dùng
+
+- tất cả các bảng mới cho tổng các tháng và của năm đều phải hoàn toàn tuân thủ mẫu, chức năng và các tiêu chuẩn khác của bộ tiêu chuẩn kê khai thuế S1a-HKD của Việt Nam
+
+văn bản tham khảo: văn bản số 152/2025/TT-BTC
+- chương I
+- mục 1, chương II
+
+mẫu số S1a-HKD
+- hộ, cá nhân kinh doanh
+- địa chỉ
+- mã số thuế
+- điạ điểm kinh doanh
+- kỳ kê khai
+- đơn vị tính
+- ngày tháng
+- diễn giải
+- số tiền
+- tổng cộng
+
+phương pháp ghi:
+- cột a: ghi ngày, tháng ghi sổ
+- cột b: ghi diễn giải doanh thu từ việc bán hàng hóa, dịch vụ, có thể ghi theo nghiệp vụ hoặc định kỳ
+- cột 1: ghi số tiền bán hàng hóa, dịch vụ

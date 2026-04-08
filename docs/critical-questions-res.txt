@@ -1,0 +1,5 @@
+- registration type: hộ kinh doanh (household business)
+- tax method: revenue-based declarations
+- vat: does not sell any taxable goods
+- output format: need printable forms matching official tax authority template number "S1a-HKD"
+- personal income tax: need TNCN (personal income) calculations as well

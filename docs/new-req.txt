@@ -1,0 +1,36 @@
+- calculate the monthly total revenue automatically
+- calculate the annual total revenue automatically
+
+- process the fee information on the appointment table
+- calculate the sum and display by month on the main interface
+- reset to 0 on day 1 of every month
+- when reset, add the monthly total to the annual total
+- add a new table to display the total of each month in the year and the annual total
+
+- need a new table in the database to save the monthly total
+- need a new table in the user interface to display the patient list in the database (previously omitted for single-table display layout, but with the new tables, there needs to be tab buttons to move between tables and multiple tables displayable on the interface anyway and therefore i don't have a choice anymore)
+- need a new table in the user interface to display the monthly and annual total
+- need tab buttons to move between tables in the user interface
+
+- all new tables for the monthly and annual totals need to fully comply to Vietnamese S1a-HKD tax declaration forms, functions and other standards
+
+reference document: number 152/2025/TT-BTC
+- chapter I
+- section 1, chapter II
+
+form number S1a-HKD
+- business entity
+- address
+- tax number
+- business address
+- declaration period
+- calculation unit
+- date
+- description
+- revenue
+- total
+
+recording methodology:
+- column a: date of record
+- column b: product/service sale revenue description, can be written per profession or temporal terms
+- column 1: product/service sale revenue

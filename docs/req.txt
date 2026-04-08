@@ -1,0 +1,12 @@
+name, birthYear, gender, phone, address,
+date, diagnosis, treatment, needsImplant, needsDenture, needsOrthodontics, fee, note
+
+ui: all appear on the same interface
+
+db:
+- tables:
+	- patients: id (bigint, primary), name (varchar), birth year (integer), gender (varchar), phone (varchar), address (varchar)
+	- appointments: id (bigint, primary), date (date), diagnosis (varchar), treatment (varchar), needsImplant (boolean), needsDenture (boolean), needsOrthodontics (boolean), fee (numeric), note (varchar), patientId (bigint, foreign, points to patients)
+
+- relationships:
+	- patients -> 1 - n <- appointments

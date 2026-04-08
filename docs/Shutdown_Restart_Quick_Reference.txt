@@ -1,0 +1,180 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║         DENTAL CLINIC - SHUTDOWN & RESTART QUICK GUIDE            ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────┐
+│ DESKTOP SHORTCUTS (Recommended)                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  🛑 Shutdown Dental Clinic  →  Stops the system                 │
+│  🔄 Restart Dental Clinic   →  Starts the system                │
+│                                                                 │
+│  Right-click both → Properties → Advanced →                     │
+│  ✅ Check "Run as administrator"                                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ HOW TO SHUTDOWN                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. Double-click "🛑 Shutdown Dental Clinic"                     │
+│  2. Click "Yes" when Windows asks for admin rights              │
+│  3. Wait for completion message                                 │
+│  4. Press any key to close                                      │
+│                                                                 │
+│  ✅ System is now stopped - safe to maintain                     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ HOW TO RESTART                                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. Double-click "🔄 Restart Dental Clinic"                      │
+│  2. Click "Yes" when Windows asks for admin rights              │
+│  3. Wait 15-30 seconds for startup                              │
+│  4. Window auto-closes when ready                               │
+│                                                                 │
+│  ✅ System is now running - test at http://localhost:8080        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ WHEN TO USE SHUTDOWN                                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  • Before updating the application                              │
+│  • Before database maintenance                                  │
+│  • When troubleshooting problems                                │
+│  • Before changing configuration                                │
+│  • Before restarting Windows                                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ TYPICAL MAINTENANCE WORKFLOW                                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. 🛑 SHUTDOWN the system                                       │
+│  2. 💾 BACKUP files (optional but recommended)                   │
+│  3. 🔧 PERFORM maintenance (update, fix, configure)              │
+│  4. 🔄 RESTART the system                                        │
+│  5. ✅ VERIFY everything works                                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ TROUBLESHOOTING                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Problem: "Must be run as Administrator"                        │
+│  Fix: Right-click script → "Run as administrator"               │
+│                                                                 │
+│  Problem: Service won't start after restart                     │
+│  Fix 1: Check database is running                               │
+│  Fix 2: Check logs at C:\DentalClinic\service\logs\             │
+│  Fix 3: Try manual start: java -jar [JAR file]                  │
+│                                                                 │
+│  Problem: Application not accessible after restart              │
+│  Fix: Wait 30 more seconds, may still be starting               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ EMERGENCY: COMPLETE RESET                                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  If everything is broken:                                       │
+│                                                                 │
+│  1. Run shutdown script                                         │
+│  2. Open Command Prompt as Admin                                │
+│  3. Run: taskkill /F /IM java.exe                               │
+│  4. Run: net stop postgresql-x64-14                             │
+│  5. Run: net start postgresql-x64-14                            │
+│  6. Run restart script                                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ IMPORTANT FILE LOCATIONS                                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Scripts:   C:\DentalClinic\shutdown-system.bat                 │
+│             C:\DentalClinic\restart-system.bat                  │
+│                                                                 │
+│  Logs:      C:\DentalClinic\service\logs\                       │
+│                                                                 │
+│  Config:    C:\DentalClinic\application.properties              │
+│                                                                 │
+│  App:       http://localhost:8080                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SAFETY CHECKLIST                                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Before Shutdown:                                               │
+│   ☐ Notify users system will be unavailable                     │
+│   ☐ Ensure no active appointments being entered                 │
+│   ☐ Note current time for log reference                         │
+│                                                                 │
+│  After Restart:                                                 │
+│   ☐ Wait full 30 seconds for initialization                     │
+│   ☐ Open http://localhost:8080                                  │
+│   ☐ Test search function                                        │
+│   ☐ Verify recent data is visible                               │
+│   ☐ Notify users system is back online                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ QUICK STATUS CHECKS                                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Is service running?                                            │
+│  → Open: services.msc                                           │
+│  → Find: "Dental Clinic Management System"                      │
+│  → Status should show: "Running"                                │
+│                                                                 │
+│  Is application responding?                                     │
+│  → Open browser                                                 │
+│  → Go to: http://localhost:8080                                 │
+│  → Should load the clinic app                                   │
+│                                                                 │
+│  Is database accessible?                                        │
+│  → Command Prompt:                                              │
+│  → psql -U postgres -d dental_clinic -c "SELECT 1"              │
+│  → Should return: 1                                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ REMEMBER                                                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ✅ Always run scripts as Administrator                          │
+│  ✅ Wait for completion messages                                 │
+│  ✅ Backup before major changes                                  │
+│  ✅ Test after restart                                           │
+│  ✅ Check logs if problems occur                                 │
+│                                                                 │
+│  ❌ Don't interrupt scripts while running                        │
+│  ❌ Don't run both scripts at same time                          │
+│  ❌ Don't shutdown during active data entry                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+
+SUPPORT:
+  For detailed instructions: Shutdown_Restart_Guide.md
+  For service management: Quick_Reference_Card.md
+  Emergency contact: _________________________________
+
+═══════════════════════════════════════════════════════════════════
+
+              Print this page and keep at your desk!

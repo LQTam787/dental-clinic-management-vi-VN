@@ -57,6 +57,12 @@
             <optional>true</optional>
         </dependency>
         
+        <!-- Flyway — database migration (Session 1: V2__revenue_tables.sql) -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
         <!-- Spring Boot Starter Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

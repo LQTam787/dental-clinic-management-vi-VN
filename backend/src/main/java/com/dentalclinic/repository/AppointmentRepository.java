@@ -1,5 +1,6 @@
 package com.dentalclinic.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -78,4 +79,56 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	List<AppointmentWithPatientDTO> findAppointmentsWithPatients(@Param("search") String search,
 			@Param("needsImplant") Boolean needsImplant, @Param("needsDenture") Boolean needsDenture,
 			@Param("needsOrthodontics") Boolean needsOrthodontics);
+
+	// -----------------------------------------------------------------------
+	// Revenue aggregation queries — added Session 2
+	// Used by RevenueService for live (unfinalized) monthly calculations.
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Sum of all appointment fees for a specific calendar month.
+	 *
+	 * <p>Uses {@code COALESCE} at two levels:
+	 * <ul>
+	 *   <li>Inner {@code COALESCE(a.fee, 0)} — treats NULL fees as zero.</li>
+	 *   <li>Outer {@code COALESCE(SUM(...), 0)} — returns zero rather than NULL
+	 *       when there are no appointments in the period.</li>
+	 * </ul>
+	 *
+	 * @param year  4-digit calendar year
+	 * @param month 1-based month number (1 = January … 12 = December)
+	 * @return Non-null sum of fees; {@code BigDecimal.ZERO} when no appointments exist
+	 */
+	@Query("SELECT COALESCE(SUM(COALESCE(a.fee, 0)), 0) FROM Appointment a "
+			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month")
+	BigDecimal sumFeeByYearAndMonth(@Param("year") int year, @Param("month") int month);
+
+	/**
+	 * Count of appointments for a specific calendar month.
+	 *
+	 * @param year  4-digit calendar year
+	 * @param month 1-based month number
+	 * @return Number of appointments in the period (0 if none)
+	 */
+	@Query("SELECT COUNT(a) FROM Appointment a "
+			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month")
+	long countByYearAndMonth(@Param("year") int year, @Param("month") int month);
+
+	/**
+	 * Fetches all appointments with their associated patient for a given calendar
+	 * month, ordered by date ASC then patient name ASC.
+	 *
+	 * <p>Used by {@link com.dentalclinic.service.RevenueService#getS1aHkdData}
+	 * (Session 3) to build the per-row entries of the S1a-HKD ledger.
+	 *
+	 * @param year  4-digit calendar year
+	 * @param month 1-based month number
+	 * @return List of {@code Object[]} where index 0 is {@link Appointment} and
+	 *         index 1 is {@link com.dentalclinic.model.Patient}
+	 */
+	@Query("SELECT a, p FROM Appointment a JOIN a.patient p "
+			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month "
+			+ "ORDER BY a.date ASC, p.name ASC")
+	List<Object[]> findAppointmentsWithPatientsByYearAndMonth(
+			@Param("year") int year, @Param("month") int month);
 }

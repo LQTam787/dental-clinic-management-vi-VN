@@ -15,26 +15,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dentalclinic.dto.MonthlyRevenueDTO;
+import com.dentalclinic.dto.S1aHkdDTO;
+import com.dentalclinic.dto.S1aHkdEntryDTO;
+import com.dentalclinic.model.Appointment;
 import com.dentalclinic.model.ClinicSettings;
 import com.dentalclinic.model.MonthlyRevenue;
+import com.dentalclinic.model.Patient;
 import com.dentalclinic.repository.AppointmentRepository;
 import com.dentalclinic.repository.MonthlyRevenueRepository;
 
 /**
  * Core service for the Revenue & Tax subsystem.
  *
- * <p>Responsibilities:
+ * <p>
+ * Responsibilities:
  * <ul>
- *   <li>Computing live (unfinalized) monthly totals directly from the
- *       {@code appointments} table.</li>
- *   <li>Building the 12-element annual summary list.</li>
- *   <li>Finalizing a month — writing an immutable snapshot to
- *       {@code monthly_revenue}.</li>
- *   <li>Providing the raw data for the S1a-HKD ledger (Session 3 extends
- *       this with {@code getS1aHkdData}).</li>
+ * <li>Computing live (unfinalized) monthly totals directly from the
+ * {@code appointments} table.</li>
+ * <li>Building the 12-element annual summary list.</li>
+ * <li>Finalizing a month — writing an immutable snapshot to
+ * {@code monthly_revenue}.</li>
+ * <li>Providing the raw data for the S1a-HKD ledger (Session 3 extends
+ * this with {@code getS1aHkdData}).</li>
  * </ul>
  *
- * <p><strong>Monthly reset mechanics:</strong> "Reset to zero on day 1" does
+ * <p>
+ * <strong>Monthly reset mechanics:</strong> "Reset to zero on day 1" does
  * NOT delete data. The scheduled job (or manual endpoint) takes a snapshot of
  * the previous month's total and writes it to {@code monthly_revenue}. The
  * live monthly total is always re-computed from the {@code appointments} table,
@@ -59,7 +65,8 @@ public class RevenueService {
     /**
      * Live revenue total for the current calendar month.
      *
-     * <p>Computes {@code SUM(COALESCE(fee, 0))} directly from the
+     * <p>
+     * Computes {@code SUM(COALESCE(fee, 0))} directly from the
      * {@code appointments} table for the current year/month. Never returns
      * {@code null}.
      *
@@ -86,7 +93,8 @@ public class RevenueService {
     /**
      * Builds a {@link MonthlyRevenueDTO} for the current calendar month.
      *
-     * <p>The returned DTO always has {@code finalized = false} because the
+     * <p>
+     * The returned DTO always has {@code finalized = false} because the
      * current month is never finalized until it has ended.
      *
      * @return Live DTO for the current month
@@ -103,7 +111,8 @@ public class RevenueService {
     /**
      * Returns a {@link MonthlyRevenueDTO} for the given year/month.
      *
-     * <p>If a finalized snapshot exists in {@code monthly_revenue}, that row
+     * <p>
+     * If a finalized snapshot exists in {@code monthly_revenue}, that row
      * is returned (finalized = true). Otherwise a live DTO is computed from
      * the {@code appointments} table (finalized = false).
      *
@@ -122,12 +131,13 @@ public class RevenueService {
     /**
      * Returns a 12-element list of monthly revenue DTOs for the given year.
      *
-     * <p>The list is always exactly 12 elements (index 0 = January,
+     * <p>
+     * The list is always exactly 12 elements (index 0 = January,
      * index 11 = December). For each month:
      * <ul>
-     *   <li>If a finalized snapshot exists → use it (finalized = true).</li>
-     *   <li>If the month is in the past (but no snapshot) → compute live.</li>
-     *   <li>If the month is in the future → return a zero-value DTO.</li>
+     * <li>If a finalized snapshot exists → use it (finalized = true).</li>
+     * <li>If the month is in the past (but no snapshot) → compute live.</li>
+     * <li>If the month is in the future → return a zero-value DTO.</li>
      * </ul>
      *
      * @param year 4-digit calendar year
@@ -164,7 +174,8 @@ public class RevenueService {
     /**
      * Annual revenue total for the given year.
      *
-     * <p>Sums all finalized monthly totals from {@code monthly_revenue} plus
+     * <p>
+     * Sums all finalized monthly totals from {@code monthly_revenue} plus
      * the live current-month total if the year is the current year. For past
      * years, only finalized rows contribute (months that were never finalized
      * will be absent from the total — the caller is expected to surface the
@@ -175,7 +186,8 @@ public class RevenueService {
      */
     public BigDecimal getAnnualTotal(int year) {
         BigDecimal finalizedTotal = monthlyRevenueRepository.sumTotalRevenueByYear(year);
-        if (finalizedTotal == null) finalizedTotal = BigDecimal.ZERO;
+        if (finalizedTotal == null)
+            finalizedTotal = BigDecimal.ZERO;
 
         LocalDate today = LocalDate.now();
         if (year == today.getYear()) {
@@ -203,16 +215,18 @@ public class RevenueService {
      * Finalizes a calendar month — writes an immutable snapshot to
      * {@code monthly_revenue}.
      *
-     * <p>This method is <strong>idempotent</strong>: if a finalized row already
+     * <p>
+     * This method is <strong>idempotent</strong>: if a finalized row already
      * exists for the given year/month, it is returned unchanged. The second
      * call has no side effects.
      *
-     * <p>Steps when a snapshot does not yet exist:
+     * <p>
+     * Steps when a snapshot does not yet exist:
      * <ol>
-     *   <li>Compute {@code SUM(COALESCE(fee,0))} from {@code appointments}.</li>
-     *   <li>Read current TNCN rate from {@link ClinicSettings} and lock it into
-     *       the snapshot (changing the rate later will not alter this row).</li>
-     *   <li>Write and persist the {@link MonthlyRevenue} row.</li>
+     * <li>Compute {@code SUM(COALESCE(fee,0))} from {@code appointments}.</li>
+     * <li>Read current TNCN rate from {@link ClinicSettings} and lock it into
+     * the snapshot (changing the rate later will not alter this row).</li>
+     * <li>Write and persist the {@link MonthlyRevenue} row.</li>
      * </ol>
      *
      * @param year  4-digit calendar year
@@ -229,7 +243,8 @@ public class RevenueService {
 
         // Compute live totals from appointments table
         BigDecimal totalRevenue = appointmentRepository.sumFeeByYearAndMonth(year, month);
-        if (totalRevenue == null) totalRevenue = BigDecimal.ZERO;
+        if (totalRevenue == null)
+            totalRevenue = BigDecimal.ZERO;
 
         long appointmentCount = appointmentRepository.countByYearAndMonth(year, month);
 
@@ -259,6 +274,91 @@ public class RevenueService {
     }
 
     // -----------------------------------------------------------------------
+    // S1a-HKD form data — Session 3
+    // -----------------------------------------------------------------------
+
+    /**
+     * Builds the complete {@link S1aHkdDTO} for the given year/month.
+     *
+     * <p>
+     * Steps:
+     * <ol>
+     * <li>Fetch {@link ClinicSettings} for the header block fields.</li>
+     * <li>Query all appointments with their patients for the period,
+     * ordered by date ASC then patient name ASC.</li>
+     * <li>Map each row to an {@link S1aHkdEntryDTO}:
+     * <ul>
+     * <li>Cột A — {@code appointment.date}</li>
+     * <li>Cột B — {@code "Dịch vụ nha khoa — " + patient.name}</li>
+     * <li>Cột 1 — {@code COALESCE(appointment.fee, 0)}</li>
+     * </ul>
+     * </li>
+     * <li>Sum all entry amounts → {@code totalRevenue}.</li>
+     * <li>Apply {@code tncnRate} → {@code tncnAmount} (rounded HALF_UP to 2
+     * dp).</li>
+     * <li>Set {@code signatureDate} to today in "Ngày DD tháng MM năm YYYY"
+     * format.</li>
+     * </ol>
+     *
+     * <p>
+     * NULL-fee appointments are included with {@code amount = 0} and do not
+     * cause any exception. An empty period (no appointments) returns a valid DTO
+     * with an empty entries list and all totals at zero.
+     *
+     * <p>
+     * Empty {@code clinic_settings} string fields are returned as-is
+     * (empty strings). The frontend renders {@code "..........."} placeholders
+     * for blank fields.
+     *
+     * @param year  4-digit calendar year
+     * @param month 1-based month number (1 = January … 12 = December)
+     * @return A fully populated {@link S1aHkdDTO}; never {@code null}
+     */
+    public S1aHkdDTO getS1aHkdData(int year, int month) {
+        ClinicSettings settings = settingsService.getSettings();
+
+        String declarationPeriod = String.format("Tháng %02d/%d", month, year);
+
+        List<Object[]> rows = appointmentRepository
+                .findAppointmentsWithPatientsByYearAndMonth(year, month);
+
+        List<S1aHkdEntryDTO> entries = new ArrayList<>(rows.size());
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+
+        for (Object[] row : rows) {
+            Appointment appt = (Appointment) row[0];
+            Patient patient = (Patient) row[1];
+
+            BigDecimal amount = appt.getFee() != null ? appt.getFee() : BigDecimal.ZERO;
+            String description = "Dịch vụ nha khoa — " + patient.getName();
+
+            entries.add(new S1aHkdEntryDTO(appt.getDate(), description, amount));
+            totalRevenue = totalRevenue.add(amount);
+        }
+
+        BigDecimal tncnAmount = totalRevenue
+                .multiply(settings.getTncnRate())
+                .setScale(2, RoundingMode.HALF_UP);
+
+        LocalDate today = LocalDate.now();
+        String signatureDate = String.format("Ngày %02d tháng %02d năm %d",
+                today.getDayOfMonth(), today.getMonthValue(), today.getYear());
+
+        return new S1aHkdDTO(
+                nullToEmpty(settings.getBusinessName()),
+                nullToEmpty(settings.getOwnerName()),
+                nullToEmpty(settings.getAddress()),
+                nullToEmpty(settings.getTaxId()),
+                nullToEmpty(settings.getBusinessAddress()),
+                declarationPeriod,
+                settings.getCurrencyUnit() != null ? settings.getCurrencyUnit() : "VNĐ",
+                entries,
+                totalRevenue,
+                tncnAmount,
+                signatureDate);
+    }
+
+    // -----------------------------------------------------------------------
     // Private helpers
     // -----------------------------------------------------------------------
 
@@ -268,7 +368,8 @@ public class RevenueService {
      */
     private MonthlyRevenueDTO buildLiveDTO(int year, int month) {
         BigDecimal totalRevenue = appointmentRepository.sumFeeByYearAndMonth(year, month);
-        if (totalRevenue == null) totalRevenue = BigDecimal.ZERO;
+        if (totalRevenue == null)
+            totalRevenue = BigDecimal.ZERO;
 
         long appointmentCount = appointmentRepository.countByYearAndMonth(year, month);
 
@@ -296,7 +397,11 @@ public class RevenueService {
                 entity.getAppointmentCount(),
                 entity.getTncnAmount(),
                 entity.getFinalized(),
-                entity.getFinalizedAt()
-        );
+                entity.getFinalizedAt());
+    }
+
+    /** Returns the string value, or an empty string if {@code null}. */
+    private String nullToEmpty(String value) {
+        return value != null ? value : "";
     }
 }

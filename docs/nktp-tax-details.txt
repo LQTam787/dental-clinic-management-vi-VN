@@ -1,0 +1,9 @@
+{
+  "businessName": "Phòng khám Nha khoa Thanh Phong",
+  "ownerName": "Đỗ Thanh Phong",
+  "address": "186 Hoàng Công, Kiến Hưng, Hà Nội",
+  "taxId": "0123456789",
+  "businessAddress": "186 Hoàng Công, Kiến Hưng, Hà Nội",
+  "currencyUnit": "VNĐ",
+  "tncnRate": 0.0200
+}

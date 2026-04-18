@@ -2668,3 +2668,730 @@ select.form-input {
 /* ============================================================
    END OF SESSION 4 STYLES
    ============================================================ */
+
+/* ============================================================
+   SESSION 5 — REVENUE TAB VIEW
+   ============================================================ */
+
+/* ── Revenue tab container ─────────────────────────────────── */
+.revenue-tab-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Segmented control ─────────────────────────────────────── */
+.revenue-segment-control {
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 0.375rem;
+  gap: 0.25rem;
+  width: fit-content;
+}
+
+.revenue-segment-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.revenue-segment-btn:hover {
+  background: rgba(102, 126, 234, 0.08);
+  color: #667eea;
+}
+
+.revenue-segment-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.revenue-view-content {
+  flex: 1;
+}
+
+/* ── TNCN disclaimer ───────────────────────────────────────── */
+.tncn-disclaimer {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-left: 4px solid #ffc107;
+  color: #7a5b00;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ============================================================
+   SESSION 5 — CURRENT MONTH WIDGET
+   ============================================================ */
+
+.current-month-widget {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 700px;
+}
+
+.current-month-widget--loading,
+.current-month-widget--error {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #666;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.cmw-period {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.cmw-live-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4caf50;
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.cmw-live-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4caf50;
+  letter-spacing: 0.05em;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.cmw-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.cmw-stat {
+  border-radius: 8px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.cmw-stat--revenue {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.cmw-stat--count {
+  background: rgba(76, 175, 80, 0.08);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.cmw-stat--tncn {
+  background: rgba(255, 193, 7, 0.08);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+}
+
+.cmw-stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.cmw-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+  word-break: break-all;
+}
+
+.cmw-stat--revenue .cmw-stat-value { color: #5c6bc0; }
+.cmw-stat--count  .cmw-stat-value { color: #388e3c; }
+.cmw-stat--tncn   .cmw-stat-value { color: #f9a825; }
+
+/* Shared spinner (used by multiple components) */
+.cmw-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .cmw-stats {
+    grid-template-columns: 1fr;
+  }
+  .current-month-widget {
+    padding: 1.25rem;
+  }
+}
+
+/* ============================================================
+   SESSION 5 — ANNUAL SUMMARY TABLE
+   ============================================================ */
+
+.annual-summary-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ast-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ast-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.ast-year-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.ast-year-select {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: white;
+}
+
+.ast-error {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ast-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.ast-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.ast-table thead {
+  background: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.ast-table th {
+  padding: 0.875rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #444;
+  border-bottom: 2px solid #e0e0e0;
+  white-space: nowrap;
+}
+
+.ast-table th.ast-num,
+.ast-table td.ast-num {
+  text-align: right;
+}
+
+.ast-table td {
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.ast-table tbody tr:last-child td { border-bottom: none; }
+
+/* Row variants */
+.ast-row--future td { color: #bbb; }
+.ast-row--current { background: rgba(102, 126, 234, 0.04); }
+.ast-row--finalized { }
+
+.ast-revenue { color: #5c6bc0; font-weight: 500; }
+.ast-tncn    { color: #f9a825; font-weight: 500; }
+
+.ast-loading-cell {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+.ast-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* Status badges */
+.finalized-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(76, 175, 80, 0.1);
+  color: #2e7d32;
+  border-radius: 12px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.finalized-date {
+  color: #888;
+  font-weight: 400;
+}
+
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #5c6bc0;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5c6bc0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.future-badge {
+  color: #bbb;
+  font-size: 0.8rem;
+}
+
+.not-finalized-badge {
+  display: inline-block;
+  background: rgba(255, 152, 0, 0.12);
+  color: #e65100;
+  border-radius: 12px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ast-finalize-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-finalize {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+
+.btn-finalize:hover:not(:disabled) { opacity: 0.85; }
+.btn-finalize:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ast-total-row {
+  background: #f8f9fa;
+  border-top: 2px solid #e0e0e0;
+}
+
+.ast-total-row td {
+  padding: 0.875rem 0.75rem;
+  border-bottom: none;
+}
+
+/* ============================================================
+   SESSION 5 — S1a-HKD LEDGER VIEW
+   ============================================================ */
+
+.s1a-hkd-ledger-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.s1a-hkd-view-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* Controls bar */
+.s1a-hkd-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.s1a-hkd-period-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.s1a-hkd-period-picker label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.s1a-select {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: white;
+}
+
+.s1a-hkd-export-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.s1a-error {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.s1a-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2.5rem;
+  color: #666;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ── The official S1a-HKD form ─────────────────────────────── */
+.s1a-hkd-form-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 2rem 2.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Header */
+.s1a-hkd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.s1a-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.s1a-header-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.s1a-form-number {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.s1a-form-ref {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.s1a-header-field {
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+
+.s1a-field-label {
+  font-weight: 600;
+  white-space: nowrap;
+  color: #444;
+}
+
+.s1a-field-value {
+  color: #222;
+}
+
+/* Title block */
+.s1a-hkd-title-block {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.s1a-main-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #111;
+  margin: 0;
+}
+
+.s1a-sub-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.s1a-sub-fields .s1a-header-field {
+  justify-content: center;
+}
+
+/* Data table */
+.s1a-hkd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.s1a-hkd-table th,
+.s1a-hkd-table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.75rem;
+}
+
+.s1a-hkd-table thead {
+  background: #f5f5f5;
+}
+
+.s1a-hkd-table th {
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.s1a-col-ref {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #777;
+}
+
+.s1a-col-date   { width: 120px; }
+.s1a-col-amount { width: 130px; text-align: right; }
+
+.s1a-date-cell   { white-space: nowrap; color: #555; }
+.s1a-desc-cell   { }
+.s1a-amount-cell { text-align: right; font-variant-numeric: tabular-nums; }
+
+.s1a-empty-cell {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 1.5rem;
+}
+
+.s1a-total-row {
+  background: #f8f9fa;
+}
+
+.s1a-total-label {
+  font-weight: 600;
+  text-align: right;
+}
+
+.s1a-total-amount {
+  font-size: 1rem;
+}
+
+/* TNCN line (screen only) */
+.s1a-tncn-line {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Footer / signature */
+.s1a-hkd-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  page-break-inside: avoid;
+}
+
+.s1a-signature-date {
+  font-style: italic;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.s1a-signature-block {
+  text-align: center;
+  min-width: 220px;
+}
+
+.s1a-signature-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.s1a-signature-instruction {
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.s1a-signature-name {
+  margin-top: 2.5rem;
+  font-weight: 600;
+  border-top: 1px solid #aaa;
+  padding-top: 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* ── Print overrides for session 5 ────────────────────────── */
+@media print {
+  /* Hide all UI chrome */
+  .app-header,
+  .tab-bar,
+  .action-buttons,
+  .controls-container,
+  .results-info,
+  .tncn-disclaimer,
+  .s1a-tncn-line,
+  .s1a-hkd-controls,
+  .s1a-hkd-export-buttons,
+  .revenue-segment-control {
+    display: none !important;
+  }
+
+  /* Show only the form */
+  .s1a-hkd-form-container {
+    display: flex !important;
+    width: 100%;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  @page { margin: 2cm; }
+
+  .s1a-hkd-footer { page-break-inside: avoid; }
+}
+
+/* ── Responsive adjustments ────────────────────────────────── */
+@media (max-width: 768px) {
+  .revenue-segment-control {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .revenue-segment-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem 0.5rem;
+    font-size: 0.82rem;
+  }
+  .s1a-hkd-form-container {
+    padding: 1rem;
+  }
+  .s1a-hkd-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .s1a-hkd-export-buttons {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .s1a-hkd-export-buttons .btn {
+    flex: 1;
+    justify-content: center;
+  }
+  .cmw-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .cmw-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   END OF SESSION 5 STYLES
+   ============================================================ */

@@ -8,6 +8,7 @@ import AppointmentForm from './components/AppointmentForm';
 import TabBar from './components/TabBar';
 import PatientTable from './components/PatientTable';
 import RevenueTabView from './components/RevenueTabView';
+import ClinicSettingsForm from './components/ClinicSettingsForm';
 import { appointmentAPI, patientAPI } from './services/api';
 import { t } from './utils/i18n';
 import './App.css';
@@ -29,8 +30,8 @@ function App() {
   const [patients, setPatients] = useState([]);
   const [patientsLoading, setPatientsLoading] = useState(false);
 
-  // Settings modal (gear icon — wired up fully in Session 6)
-  const [showSettingsModal, setShowSettingsModal] = useState(false); // eslint-disable-line no-unused-vars
+  // Settings modal
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Tìm kiếm và lọc
   const [searchTerm, setSearchTerm] = useState('');
@@ -504,6 +505,16 @@ function App() {
           onClose={handleCloseAppointmentForm}
           onSave={handleAppointmentSave}
         />
+      </Modal>
+
+      {/* Modal Cài đặt phòng khám */}
+      <Modal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+        title="Cài đặt phòng khám"
+        size="medium"
+      >
+        <ClinicSettingsForm onClose={() => setShowSettingsModal(false)} />
       </Modal>
     </div>
   );

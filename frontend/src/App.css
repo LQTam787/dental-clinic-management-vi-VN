@@ -3395,3 +3395,50 @@ select.form-input {
 /* ============================================================
    END OF SESSION 5 STYLES
    ============================================================ */
+
+/* ============================================================
+   SESSION 6 — CLINIC SETTINGS FORM
+   ============================================================ */
+
+/* Settings form reuses .form-group, .form-label, .form-input,
+   .form-actions, .form-actions-right from existing form styles.
+   Only additions go here. */
+
+.clinic-settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Loading state inside modal */
+.settings-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2.5rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Info icon next to TNCN rate label */
+.csf-tncn-tooltip-icon {
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: #667eea;
+  cursor: help;
+  font-size: 0.9rem;
+  vertical-align: middle;
+  user-select: none;
+}
+
+/* Reduced-prominence disclaimer beneath the TNCN rate input */
+.csf-tncn-hint {
+  font-size: 0.82rem;
+  margin-top: 0.25rem;
+  padding: 0.4rem 0.75rem;
+}
+
+/* ============================================================
+   END OF SESSION 6 STYLES
+   ============================================================ */

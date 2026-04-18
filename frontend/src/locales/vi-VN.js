@@ -238,6 +238,87 @@ export const viVN = {
     female: 'Nữ',
     other: 'Khác',
   },
+
+  // Tab labels
+  tab: {
+    appointments: 'Lịch hẹn',
+    patients: 'Bệnh nhân',
+    revenue: 'Doanh thu & Thuế',
+  },
+
+  // Clinic settings modal
+  settings: {
+    title: 'Cài đặt phòng khám',
+    businessName: 'Tên hộ/cá nhân kinh doanh',
+    ownerName: 'Người đại diện',
+    address: 'Địa chỉ',
+    taxId: 'Mã số thuế',
+    businessAddress: 'Địa điểm kinh doanh',
+    currencyUnit: 'Đơn vị tính',
+    tncnRate: 'Tỷ lệ thuế TNCN (%)',
+    tncnRateTooltip: 'Xác nhận tỷ lệ này với Chi cục Thuế địa phương trước khi sử dụng cho hồ sơ thuế chính thức',
+    save: 'Lưu cài đặt',
+    saved: 'Đã lưu',
+  },
+
+  // Revenue tab
+  revenue: {
+    title: 'Doanh thu & Thuế',
+    currentMonth: 'Tháng hiện tại',
+    annualSummary: 'Tổng theo năm',
+    ledger: 'Sổ S1a-HKD',
+    totalRevenue: 'Tổng doanh thu',
+    appointmentCount: 'Số lịch hẹn',
+    estimatedTncn: 'Thuế TNCN ước tính',
+    finalize: 'Chốt sổ',
+    finalized: 'Đã chốt',
+    notFinalized: 'Chưa chốt sổ',
+    finalizeMonth: 'Chốt sổ tháng',
+    printForm: 'In sổ',
+    exportExcel: 'Xuất Excel',
+  },
+
+  // S1a-HKD form labels
+  s1ahkd: {
+    formTitle: 'SỔ DOANH THU BÁN HÀNG HÓA, DỊCH VỤ',
+    formNumber: 'Mẫu số S1a-HKD',
+    formRef: '(TT 152/2025/TT-BTC)',
+    businessLabel: 'HỘ, CÁ NHÂN KINH DOANH',
+    addressLabel: 'Địa chỉ',
+    taxIdLabel: 'Mã số thuế',
+    businessAddressLabel: 'Địa điểm kinh doanh',
+    periodLabel: 'Kỳ kê khai',
+    unitLabel: 'Đơn vị tính',
+    colA: 'Ngày tháng',
+    colB: 'Diễn giải',
+    col1: 'Số tiền',
+    total: 'Tổng cộng',
+    signatureTitle: 'NGƯỜI ĐẠI DIỆN HỘ KINH DOANH/\nCÁ NHÂN KINH DOANH',
+    signatureInstruction: '(Ký, ghi rõ họ tên, đóng dấu (nếu có))',
+    entryDescription: 'Dịch vụ nha khoa —',
+  },
+
+  // TNCN disclaimer
+  tncn: {
+    disclaimer: 'Thuế TNCN ước tính — xác nhận tỷ lệ với cơ quan thuế trước khi nộp',
+    estimatedFor: 'TNCN ước tính tháng',
+    rate: 'Tỷ lệ TNCN',
+  },
+
+  // Annual summary table
+  annual: {
+    month: 'Tháng',
+    description: 'Diễn giải',
+    revenue: 'Doanh thu',
+    estimatedTncn: 'TNCN ước tính',
+    status: 'Trạng thái',
+    total: 'Tổng cộng năm',
+    months: [
+      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4',
+      'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8',
+      'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12',
+    ],
+  },
 };
 
 export default viVN;

@@ -52,6 +52,13 @@ function S1aHkdLedgerView() {
     fetchData(year, month);
   }, [year, month, fetchData]);
 
+  // Refetch whenever clinic settings are updated (dispatched by ClinicSettingsForm)
+  useEffect(() => {
+    const handleSettingsUpdated = () => fetchData(year, month);
+    window.addEventListener('settings-updated', handleSettingsUpdated);
+    return () => window.removeEventListener('settings-updated', handleSettingsUpdated);
+  }, [year, month, fetchData]);
+
   const handlePrint = () => window.print();
 
   const handleExportExcel = () => {

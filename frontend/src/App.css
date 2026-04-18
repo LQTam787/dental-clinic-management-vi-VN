@@ -3442,3 +3442,68 @@ select.form-input {
 /* ============================================================
    END OF SESSION 6 STYLES
    ============================================================ */
+
+/* ============================================================
+   SESSION 7 — PRINT & EXPORT POLISH
+   ============================================================ */
+
+/* Annual summary export button spacing */
+.ast-export-btn {
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── Consolidated @media print (supersedes earlier blocks) ── */
+@media print {
+  /* Hide all navigation, controls, and non-printable UI */
+  .app-header,
+  .tab-bar,
+  .action-buttons,
+  .controls-container,
+  .results-info,
+  .tncn-disclaimer,
+  .s1a-tncn-line,
+  .s1a-hkd-controls,
+  .s1a-hkd-export-buttons,
+  .revenue-segment-control,
+  .ast-export-btn,
+  .btn-finalize,
+  .ast-finalize-group .not-finalized-badge + button {
+    display: none !important;
+  }
+
+  /* Reset background/shadow for print */
+  body {
+    background: white !important;
+  }
+
+  .s1a-hkd-form-container {
+    display: flex !important;
+    width: 100%;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    gap: 1rem;
+  }
+
+  /* Ensure table borders print */
+  .s1a-hkd-table,
+  .s1a-hkd-table th,
+  .s1a-hkd-table td {
+    border-color: #000 !important;
+  }
+
+  /* Keep signature block on same page */
+  .s1a-hkd-footer {
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 2cm;
+    size: A4 portrait;
+  }
+}
+
+/* ============================================================
+   END OF SESSION 7 STYLES
+   ============================================================ */

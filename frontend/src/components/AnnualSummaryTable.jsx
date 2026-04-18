@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import * as XLSX from 'xlsx';
 import { revenueAPI } from '../services/api';
 
 const MONTH_NAMES = [
@@ -85,6 +86,82 @@ function AnnualSummaryTable() {
   const isCurrentMonth = (monthIdx) =>
     selectedYear === currentYear && monthIdx + 1 === currentMonth;
 
+  const handleExportExcel = () => {
+    if (!months.length) return;
+
+    const wb = XLSX.utils.book_new();
+    const ws_data = [];
+
+    // ── TITLE ──────────────────────────────────────────────────────────
+    ws_data.push([`TỔNG HỢP DOANH THU NĂM ${selectedYear}`, '', '', '', '']);
+    ws_data.push(['⚠ Thuế TNCN ước tính — xác nhận tỷ lệ với cơ quan thuế trước khi nộp', '', '', '', '']);
+    ws_data.push(['', '', '', '', '']);
+
+    // ── TABLE HEADER ───────────────────────────────────────────────────
+    ws_data.push(['Tháng', 'Số lịch hẹn', 'Doanh thu', 'TNCN ước tính', 'Trạng thái']);
+
+    // ── DATA ROWS ──────────────────────────────────────────────────────
+    months.forEach((m, idx) => {
+      const future = isFutureMonth(idx);
+      let status = '';
+      if (m.finalized) {
+        const dateStr = m.finalizedAt
+          ? new Date(m.finalizedAt).toLocaleDateString('vi-VN')
+          : '';
+        status = `Đã chốt${dateStr ? ' (' + dateStr + ')' : ''}`;
+      } else if (isCurrentMonth(idx)) {
+        status = 'Tháng hiện tại';
+      } else if (future) {
+        status = 'Chưa đến';
+      } else {
+        status = 'Chưa chốt sổ';
+      }
+
+      ws_data.push([
+        MONTH_NAMES[idx],
+        future ? '' : (m.appointmentCount ?? 0),
+        future ? '' : Number(m.totalRevenue ?? 0),
+        future ? '' : Number(m.tncnAmount ?? 0),
+        status,
+      ]);
+    });
+
+    // ── TOTALS ROW ─────────────────────────────────────────────────────
+    ws_data.push([
+      `Tổng cộng năm ${selectedYear}`,
+      totals.count,
+      totals.revenue,
+      totals.tncn,
+      '',
+    ]);
+
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+    // ── COLUMN WIDTHS ──────────────────────────────────────────────────
+    ws['!cols'] = [
+      { wch: 14 },  // A: month
+      { wch: 14 },  // B: count
+      { wch: 20 },  // C: revenue
+      { wch: 20 },  // D: tncn
+      { wch: 24 },  // E: status
+    ];
+
+    // ── NUMBER FORMAT for revenue + tncn columns ───────────────────────
+    const dataRowStart = 5; // 1-based: row 5 is the first data row (after 3-line header + column headers)
+    for (let r = dataRowStart; r <= dataRowStart + months.length; r++) {
+      ['C', 'D'].forEach(col => {
+        const cellRef = col + r;
+        if (ws[cellRef] && typeof ws[cellRef].v === 'number') {
+          ws[cellRef].t = 'n';
+          ws[cellRef].z = '#,##0.00';
+        }
+      });
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, `Năm ${selectedYear}`);
+    XLSX.writeFile(wb, `Doanh_thu_nam_${selectedYear}.xlsx`);
+  };
+
   return (
     <div className="annual-summary-table">
       {/* Year selector */}
@@ -102,6 +179,14 @@ function AnnualSummaryTable() {
               <option key={y} value={y}>{y}</option>
             ))}
           </select>
+          <button
+            className="btn btn-secondary btn-small ast-export-btn"
+            onClick={handleExportExcel}
+            disabled={loading || !months.length}
+            title={`Xuất doanh thu năm ${selectedYear} ra Excel`}
+          >
+            📊 Xuất Excel
+          </button>
         </div>
       </div>
 

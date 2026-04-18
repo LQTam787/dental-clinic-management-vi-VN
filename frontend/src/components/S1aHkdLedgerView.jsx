@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import * as XLSX from 'xlsx';
 import { revenueAPI } from '../services/api';
 
 const MONTH_NAMES = [
@@ -62,9 +63,97 @@ function S1aHkdLedgerView() {
   const handlePrint = () => window.print();
 
   const handleExportExcel = () => {
-    // SheetJS full implementation deferred to Session 7.
-    // Stub: inform user export will be available in the next session.
-    alert('Xuất Excel sẽ được triển khai đầy đủ trong phiên kế tiếp (Session 7).');
+    if (!data) return;
+
+    const wb = XLSX.utils.book_new();
+    const ws_data = [];
+
+    // ── HEADER BLOCK ──────────────────────────────────────────────────
+    const placeholder = '...........';
+    const biz  = (data.businessName   && data.businessName.trim())   ? data.businessName   : placeholder;
+    const addr = (data.address        && data.address.trim())        ? data.address        : placeholder;
+    const tax  = (data.taxId          && data.taxId.trim())          ? data.taxId          : placeholder;
+    const bizAddr = (data.businessAddress && data.businessAddress.trim()) ? data.businessAddress : placeholder;
+    const unit = (data.currencyUnit   && data.currencyUnit.trim())   ? data.currencyUnit   : placeholder;
+    const owner = (data.ownerName     && data.ownerName.trim())      ? data.ownerName      : placeholder;
+
+    // Row 1: business name (cols A–C) | form number (col E)
+    ws_data.push(['HỘ, CÁ NHÂN KINH DOANH: ' + biz, '', '', '', 'Mẫu số S1a-HKD']);
+    // Row 2: address | ref
+    ws_data.push(['Địa chỉ: ' + addr, '', '', '', '(TT 152/2025/TT-BTC)']);
+    // Row 3: tax ID
+    ws_data.push(['Mã số thuế: ' + tax, '', '', '', '']);
+    // Row 4: blank
+    ws_data.push(['', '', '', '', '']);
+
+    // ── TITLE BLOCK ───────────────────────────────────────────────────
+    ws_data.push(['SỔ DOANH THU BÁN HÀNG HÓA, DỊCH VỤ', '', '', '', '']);
+    ws_data.push(['Địa điểm kinh doanh: ' + bizAddr, '', '', '', '']);
+    ws_data.push(['Kỳ kê khai: ' + data.declarationPeriod, '', '', '', '']);
+    ws_data.push(['Đơn vị tính: ' + unit, '', '', '', '']);
+    // Row blank before table
+    ws_data.push(['', '', '', '', '']);
+
+    // ── TABLE HEADER ──────────────────────────────────────────────────
+    ws_data.push(['Ngày tháng (Cột A)', 'Diễn giải (Cột B)', 'Số tiền (Cột 1)', '', '']);
+
+    // ── DATA ROWS ─────────────────────────────────────────────────────
+    if (data.entries && data.entries.length > 0) {
+      data.entries.forEach(entry => {
+        const dateStr = entry.entryDate
+          ? new Date(entry.entryDate).toLocaleDateString('vi-VN', {
+              day: '2-digit', month: '2-digit', year: 'numeric',
+            })
+          : '';
+        const amount = typeof entry.amount === 'number'
+          ? entry.amount
+          : Number(entry.amount ?? 0);
+        ws_data.push([dateStr, entry.description, amount, '', '']);
+      });
+    }
+
+    // ── TỔNG CỘNG ROW ─────────────────────────────────────────────────
+    const total = typeof data.totalRevenue === 'number'
+      ? data.totalRevenue
+      : Number(data.totalRevenue ?? 0);
+    ws_data.push(['', 'Tổng cộng', total, '', '']);
+
+    // ── BLANK + SIGNATURE BLOCK ───────────────────────────────────────
+    ws_data.push(['', '', '', '', '']);
+    ws_data.push(['', '', '', data.signatureDate || '', '']);
+    ws_data.push(['', '', '', 'NGƯỜI ĐẠI DIỆN HỘ KINH DOANH/CÁ NHÂN KINH DOANH', '']);
+    ws_data.push(['', '', '', '(Ký, ghi rõ họ tên, đóng dấu (nếu có))', '']);
+    ws_data.push(['', '', '', '', '']);
+    ws_data.push(['', '', '', owner, '']);
+
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+    // ── COLUMN WIDTHS ─────────────────────────────────────────────────
+    ws['!cols'] = [
+      { wch: 18 },  // A: date
+      { wch: 45 },  // B: description
+      { wch: 16 },  // C: amount
+      { wch: 30 },  // D: (signature / header right)
+      { wch: 22 },  // E: form number
+    ];
+
+    // ── NUMBER FORMAT for amount cells ────────────────────────────────
+    // Apply Vietnamese-style number format to amount column (C = index 2)
+    const amountColLetter = 'C';
+    const dataStartRow = 11; // 1-based row index of first data row in ws
+    const dataEndRow = dataStartRow + (data.entries ? data.entries.length : 0);
+    for (let r = dataStartRow; r <= dataEndRow; r++) {
+      const cellRef = amountColLetter + r;
+      if (ws[cellRef] && typeof ws[cellRef].v === 'number') {
+        ws[cellRef].t = 'n';
+        ws[cellRef].z = '#,##0.00';
+      }
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, 'S1a-HKD');
+
+    const periodLabel = `${String(month).padStart(2, '0')}-${year}`;
+    XLSX.writeFile(wb, `S1a-HKD_${periodLabel}.xlsx`);
   };
 
   return (

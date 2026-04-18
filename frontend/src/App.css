@@ -2349,3 +2349,322 @@ select.form-input {
 /* ============================================================
    END OF SESSION 8 RESPONSIVE PATCH
    ============================================================ */
+
+/* ============================================================
+   SESSION 4 — Tab Bar, Patient Table, Revenue Placeholder
+   ============================================================ */
+
+/* ── Header right-side cluster ─────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ── Settings gear button ──────────────────────────────────── */
+.btn-settings {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  font-size: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-settings:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: rotate(30deg);
+}
+
+/* ── Tab Bar ───────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  background: white;
+  border-bottom: 2px solid #e0e0e0;
+  padding: 0 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  white-space: nowrap;
+  margin-bottom: -2px; /* sit on top of bar border */
+}
+
+.tab-button:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.06);
+}
+
+.tab-button.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+  font-weight: 600;
+}
+
+/* ── Patient table wrapper ─────────────────────────────────── */
+.patient-table-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.patient-table-search {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.patient-table-search .search-bar {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ── Patient table ─────────────────────────────────────────── */
+.patient-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.patient-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.patient-table thead {
+  background: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.patient-table th {
+  padding: 0.9rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+  white-space: nowrap;
+}
+
+.patient-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.patient-table tbody tr:hover {
+  background: #fafbff;
+}
+
+.patient-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.patient-table tr.row-deleting {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Column widths */
+.patient-table .col-stt    { width: 3rem; text-align: center; color: #888; }
+.patient-table .col-narrow { width: 7rem; }
+.patient-table .col-phone  { width: 10rem; }
+.patient-table .col-center { text-align: center; }
+.patient-table .col-actions { width: 11rem; }
+
+.patient-name-cell {
+  font-weight: 500;
+}
+
+.patient-address-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Appointment count badge */
+.appointment-count-badge {
+  display: inline-block;
+  min-width: 1.6rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #f0f0f0;
+  color: #888;
+  text-align: center;
+}
+
+.appointment-count-badge.has-appointments {
+  background: rgba(102, 126, 234, 0.12);
+  color: #667eea;
+}
+
+/* Table action buttons */
+.table-action-buttons {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+}
+
+.btn-sm {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+
+.btn-sm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-sm.btn-edit {
+  background: rgba(102, 126, 234, 0.12);
+  color: #667eea;
+}
+
+.btn-sm.btn-edit:hover:not(:disabled) {
+  background: rgba(102, 126, 234, 0.22);
+}
+
+.btn-sm.btn-delete {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.btn-sm.btn-delete:hover:not(:disabled) {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+/* No results cell */
+.no-results-cell {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-style: italic;
+}
+
+/* ── Revenue tab placeholder ───────────────────────────────── */
+.revenue-tab-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 0;
+}
+
+.revenue-placeholder-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem 3rem;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+}
+
+.revenue-placeholder-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.revenue-placeholder-card h2 {
+  font-size: 1.6rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.revenue-placeholder-subtitle {
+  color: #667eea;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.revenue-placeholder-note {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.revenue-placeholder-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.feature-item {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ── Print rules (base for Session 7 polish) ───────────────── */
+@media print {
+  .app-header,
+  .tab-bar,
+  .action-buttons,
+  .controls-container,
+  .results-info,
+  .tncn-disclaimer,
+  .s1a-hkd-controls,
+  .s1a-hkd-export-buttons {
+    display: none !important;
+  }
+
+  .s1a-hkd-form-container {
+    display: block !important;
+    width: 100%;
+  }
+
+  @page {
+    margin: 2cm;
+  }
+
+  .s1a-hkd-footer {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================================
+   END OF SESSION 4 STYLES
+   ============================================================ */

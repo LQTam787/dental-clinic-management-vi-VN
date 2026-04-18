@@ -106,5 +106,20 @@ export const appointmentAPI = {
   },
 };
 
+// Revenue API endpoints
+export const revenueAPI = {
+  getCurrentMonth: () => api.get('/revenue/current-month'),
+  getMonthlyByYear: year => api.get(`/revenue/monthly/${year}`),
+  getAnnualTotal: year => api.get(`/revenue/annual/${year}`),
+  getS1aHkd: (year, month) => api.get(`/revenue/s1a-hkd/${year}/${month}`),
+  finalizeMonth: (year, month) => api.post(`/revenue/finalize/${year}/${month}`),
+};
+
+// Clinic Settings API endpoints
+export const settingsAPI = {
+  get: () => api.get('/settings'),
+  update: settings => api.put('/settings', settings),
+};
+
 // Export the base api instance as default
 export default api;

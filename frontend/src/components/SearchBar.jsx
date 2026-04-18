@@ -14,7 +14,7 @@ import { t } from '../utils/i18n';
  * @param {string} props.value - Current search term
  * @param {Function} props.onChange - Callback function when input changes
  */
-function SearchBar({ value, onChange }) {
+function SearchBar({ value, onChange, placeholder }) {
   /**
    * Handle input change
    * Extract value from event and pass to parent's onChange
@@ -40,7 +40,7 @@ function SearchBar({ value, onChange }) {
       <input
         type="text"
         className="search-input"
-        placeholder={t('search.placeholder')}
+        placeholder={placeholder || t('search.placeholder')}
         value={value}
         onChange={handleChange}
         aria-label={t('search.ariaLabel')}

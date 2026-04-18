@@ -5,32 +5,34 @@ import TreatmentFilter from './components/TreatmentFilter';
 import Modal from './components/Modal';
 import PatientForm from './components/PatientForm';
 import AppointmentForm from './components/AppointmentForm';
-import { appointmentAPI } from './services/api';
+import TabBar from './components/TabBar';
+import PatientTable from './components/PatientTable';
+import RevenueTabView from './components/RevenueTabView';
+import { appointmentAPI, patientAPI } from './services/api';
 import { t } from './utils/i18n';
 import './App.css';
 
-/**
- * Ứng dụng chính - Main Application Component
- * Phiên bản Tiếng Việt (vi-VN)
- * 
- * Tính năng CRUD đầy đủ:
- * - Tạo bệnh nhân và lịch hẹn
- * - Sửa bản ghi hiện có
- * - Xóa bản ghi
- * - Form dạng modal
- * - Thông báo thành công/lỗi
- */
 function App() {
   // ============================================
   // QUẢN LÝ TRẠNG THÁI - STATE MANAGEMENT
   // ============================================
 
-  // Trạng thái dữ liệu
+  // Tab navigation
+  const [activeTab, setActiveTab] = useState('appointments');
+
+  // Dữ liệu lịch hẹn
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Trạng thái tìm kiếm và lọc
+  // Dữ liệu bệnh nhân (for PatientTable)
+  const [patients, setPatients] = useState([]);
+  const [patientsLoading, setPatientsLoading] = useState(false);
+
+  // Settings modal (gear icon — wired up fully in Session 6)
+  const [showSettingsModal, setShowSettingsModal] = useState(false); // eslint-disable-line no-unused-vars
+
+  // Tìm kiếm và lọc
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [filters, setFilters] = useState({
@@ -42,7 +44,7 @@ function App() {
   // Trạng thái tải lần đầu
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Trạng thái Modal
+  // Modal state
   const [showPatientForm, setShowPatientForm] = useState(false);
   const [showAppointmentForm, setShowAppointmentForm] = useState(false);
   const [editingPatient, setEditingPatient] = useState(null);
@@ -51,7 +53,7 @@ function App() {
   // Chế độ chọn bệnh nhân
   const [selectPatientMode, setSelectPatientMode] = useState(false);
 
-  // Trạng thái thông báo
+  // Thông báo
   const [successMessage, setSuccessMessage] = useState(null);
 
   // Trạng thái backend
@@ -76,7 +78,7 @@ function App() {
   }, []);
 
   // ============================================
-  // DEBOUNCING CHO TÌM KIẾM
+  // DEBOUNCING
   // ============================================
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -115,30 +117,51 @@ function App() {
     }
   };
 
+  const fetchPatients = async () => {
+    setPatientsLoading(true);
+    try {
+      const response = await patientAPI.getAll();
+      setPatients(response.data);
+    } catch (err) {
+      console.error('Lỗi khi tải bệnh nhân:', err);
+    } finally {
+      setPatientsLoading(false);
+    }
+  };
+
+  // Fetch appointments when search/filter changes
   useEffect(() => {
     fetchAppointments();
   }, [debouncedSearchTerm, filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Dịch thông báo lỗi sang tiếng Việt
+  // Fetch patients once on mount
+  useEffect(() => {
+    fetchPatients();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Also refetch patients whenever the PatientTable tab becomes active
+  useEffect(() => {
+    if (activeTab === 'patients') {
+      fetchPatients();
+    }
+  }, [activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ============================================
+  // ERROR HELPERS
+  // ============================================
   const getErrorMessage = (err, operation = 'thao tác') => {
     if (!err.response) return t('errors.connection');
     if (err.response?.data?.message) return err.response.data.message;
 
     switch (err.response?.status) {
-      case 400:
-        return t('errors.invalidData');
-      case 404:
-        return t('errors.notFound');
-      case 409:
-        return err.response?.data?.message || t('errors.conflict');
-      case 500:
-        return t('errors.server');
-      default:
-        return t('errors.generic', { operation });
+      case 400: return t('errors.invalidData');
+      case 404: return t('errors.notFound');
+      case 409: return err.response?.data?.message || t('errors.conflict');
+      case 500: return t('errors.server');
+      default:  return t('errors.generic', { operation });
     }
   };
 
-  // Hiển thị thông báo thành công
   const showSuccessMessage = (message, duration = 4000) => {
     setSuccessMessage(message);
     if (window.successTimeout) clearTimeout(window.successTimeout);
@@ -146,7 +169,7 @@ function App() {
   };
 
   // ============================================
-  // XỬ LÝ MODAL - MODAL HANDLERS
+  // MODAL HANDLERS
   // ============================================
 
   const handleNewPatient = () => {
@@ -182,13 +205,12 @@ function App() {
   const handlePatientSave = () => {
     handleClosePatientForm();
     fetchAppointments();
-    setSuccessMessage(
+    fetchPatients();
+    showSuccessMessage(
       editingPatient
         ? t('patient.messages.updated')
         : t('patient.messages.created')
     );
-
-    setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   const handlePatientSelected = patient => {
@@ -198,17 +220,15 @@ function App() {
   const handleAppointmentSave = () => {
     handleCloseAppointmentForm();
     fetchAppointments();
-    setSuccessMessage(
+    showSuccessMessage(
       editingAppointment
         ? t('appointment.messages.updated')
         : t('appointment.messages.created')
     );
-
-    setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   // ============================================
-  // XỬ LÝ THAO TÁC BẢNG - TABLE ACTION HANDLERS
+  // TABLE ACTION HANDLERS
   // ============================================
 
   const handleEditAppointment = appointment => {
@@ -220,7 +240,7 @@ function App() {
     const { formatDate, formatCurrency } = await import('./utils/formatters');
     const appointmentDate = formatDate(appointment.date);
     const treatmentInfo = [];
-    
+
     if (appointment.needsImplant) treatmentInfo.push(t('table.needs.implant'));
     if (appointment.needsDenture) treatmentInfo.push(t('table.needs.denture'));
     if (appointment.needsOrthodontics) treatmentInfo.push(t('table.needs.orthodontics'));
@@ -228,13 +248,13 @@ function App() {
     let msg = t('appointment.deleteConfirm.title');
     msg += t('appointment.deleteConfirm.patient', { name: appointment.patientName });
     msg += t('appointment.deleteConfirm.date', { date: appointmentDate });
-    if (appointment.diagnosis) 
+    if (appointment.diagnosis)
       msg += t('appointment.deleteConfirm.diagnosis', { diagnosis: appointment.diagnosis });
-    if (appointment.treatment) 
+    if (appointment.treatment)
       msg += t('appointment.deleteConfirm.treatment', { treatment: appointment.treatment });
-    if (treatmentInfo.length > 0) 
+    if (treatmentInfo.length > 0)
       msg += t('appointment.deleteConfirm.needs', { needs: treatmentInfo.join(', ') });
-    if (appointment.fee) 
+    if (appointment.fee)
       msg += t('appointment.deleteConfirm.fee', { fee: formatCurrency(appointment.fee) });
     msg += t('appointment.deleteConfirm.warning');
 
@@ -258,11 +278,26 @@ function App() {
   const handleDeletePatient = () => {
     handleClosePatientForm();
     fetchAppointments();
+    fetchPatients();
+    showSuccessMessage(t('patient.messages.deleted'));
+  };
+
+  // PatientTable edit: open PatientForm in edit mode (non-select)
+  const handleEditPatientFromTable = patient => {
+    setEditingPatient(patient);
+    setSelectPatientMode(false);
+    setShowPatientForm(true);
+  };
+
+  // PatientTable delete: refresh both lists after PatientTable deletes
+  const handlePatientTableRefresh = () => {
+    fetchPatients();
+    fetchAppointments();
     showSuccessMessage(t('patient.messages.deleted'));
   };
 
   // ============================================
-  // HÀM HỖ TRỢ - HELPER FUNCTIONS
+  // HELPERS
   // ============================================
 
   const getActiveFilterCount = () => {
@@ -280,14 +315,16 @@ function App() {
     filters.needsOrthodontics !== null;
 
   // ============================================
-  // HIỂN THỊ - RENDER
+  // RENDER
   // ============================================
-  
+
   const patientModalTitle = selectPatientMode
     ? editingPatient
       ? t('patient.title.editWithName', { name: editingPatient.name })
       : t('patient.title.editPatients')
-    : t('patient.title.new');
+    : editingPatient
+      ? t('patient.title.editWithName', { name: editingPatient.name })
+      : t('patient.title.new');
 
   return (
     <div className="App">
@@ -295,109 +332,150 @@ function App() {
       <header className="app-header">
         <h1>{t('app.title')}</h1>
 
-        {/* Chỉ báo kết nối backend */}
-        <div className="backend-status">
-          {backendStatus === 'checking' && (
-            <span className="status-checking">{t('app.backendStatus.checking')}</span>
-          )}
-          {backendStatus === 'online' && (
-            <span className="status-online">{t('app.backendStatus.online')}</span>
-          )}
-          {backendStatus === 'offline' && (
-            <span className="status-offline">{t('app.backendStatus.offline')}</span>
-          )}
+        <div className="header-right">
+          {/* Chỉ báo kết nối backend */}
+          <div className="backend-status">
+            {backendStatus === 'checking' && (
+              <span className="status-checking">{t('app.backendStatus.checking')}</span>
+            )}
+            {backendStatus === 'online' && (
+              <span className="status-online">{t('app.backendStatus.online')}</span>
+            )}
+            {backendStatus === 'offline' && (
+              <span className="status-offline">{t('app.backendStatus.offline')}</span>
+            )}
+          </div>
+
+          {/* Nút cài đặt (⚙) — chức năng đầy đủ ở Session 6 */}
+          <button
+            className="btn-settings"
+            onClick={() => setShowSettingsModal(true)}
+            title="Cài đặt phòng khám"
+            aria-label="Cài đặt phòng khám"
+          >
+            ⚙
+          </button>
         </div>
       </header>
 
+      {/* Thanh điều hướng tab */}
+      <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+
       {/* Thông báo thành công */}
       {successMessage && (
-        <div className="success-message">{successMessage}</div>
+        <div className="success-message">✓ {successMessage}</div>
       )}
 
-      {/* Nội dung chính - Main Content */}
-      <main className="app-main">
-        {/* Các nút thao tác - Action Buttons */}
-        <div className="action-buttons">
-          <button className="btn btn-primary" onClick={handleNewPatient}>
-            {t('buttons.newPatient')}
-          </button>
-          <button
-            className="btn btn-primary btn-edit-patients"
-            onClick={handleEditPatients}
-          >
-            {t('buttons.editPatients')}
-          </button>
-          <button className="btn btn-primary" onClick={handleNewAppointment}>
-            {t('buttons.newAppointment')}
-          </button>
-        </div>
+      {/* Thông báo lỗi */}
+      {error && <div className="error-message">⚠️ {error}</div>}
 
-        {/* Điều khiển tìm kiếm và lọc - Controls */}
-        <div className="controls-container">
-          <SearchBar value={searchTerm} onChange={setSearchTerm} />
-          <TreatmentFilter filters={filters} onChange={setFilters} />
-        </div>
-
-        {/* Thông báo thành công */}
-        {successMessage && (
-          <div className="success-message">✓ {successMessage}</div>
-        )}
-
-        {/* Thông báo lỗi - Error Message */}
-        {error && <div className="error-message">⚠️ {error}</div>}
-
-        {/* Thông tin kết quả - Results Info */}
-        <div className="results-info">
-          {loading ? (
-            <span>{t('loading.appointments')}</span>
-          ) : (
-            <>
-              <span className="results-count">
-                {t(appointments.length === 1 ? 'search.resultsSingle' : 'search.resultsCount', 
-                   { count: appointments.length })}
-              </span>
-              {hasActiveFilters && (
-                <span className="filter-indicator">
-                  {t('search.filtered')}
-                  {debouncedSearchTerm && ` ${t('search.filteredBy', { term: debouncedSearchTerm })}`}
-                  {getActiveFilterCount() > 0 &&
-                    ` ${t(getActiveFilterCount() > 1 ? 'search.filteredAnd' : 'search.filteredAndSingle', 
-                         { count: getActiveFilterCount() })}`}
-                  )
-                </span>
-              )}
-            </>
-          )}
-        </div>
-
-        {/* Màn hình chào mừng khi chưa có dữ liệu */}
-        {!loading && appointments.length === 0 && isInitialLoad && (
-          <div className="no-data empty-state-initial">
-            <div className="no-data-icon">{t('empty.noData')}</div>
-            <h3>{t('empty.welcome')}</h3>
-            <p>{t('empty.getStarted')}</p>
-            <div className="empty-state-actions">
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowPatientForm(true)}
-              >
-                {t('buttons.addFirstPatient')}
-              </button>
-            </div>
+      {/* ── TAB 1: Lịch hẹn ─────────────────────────────────────── */}
+      {activeTab === 'appointments' && (
+        <main className="app-main">
+          {/* Các nút thao tác */}
+          <div className="action-buttons">
+            <button className="btn btn-primary" onClick={handleNewPatient}>
+              {t('buttons.newPatient')}
+            </button>
+            <button
+              className="btn btn-primary btn-edit-patients"
+              onClick={handleEditPatients}
+            >
+              {t('buttons.editPatients')}
+            </button>
+            <button className="btn btn-primary" onClick={handleNewAppointment}>
+              {t('buttons.newAppointment')}
+            </button>
           </div>
-        )}
 
-        {/* Bảng lịch hẹn - Appointment Table */}
-        <AppointmentTable
-          appointments={appointments}
-          loading={loading}
-          onEdit={handleEditAppointment}
-          onDelete={handleDeleteAppointment}
-          onRefresh={fetchAppointments}
-        />
-      </main>
+          {/* Tìm kiếm và lọc */}
+          <div className="controls-container">
+            <SearchBar value={searchTerm} onChange={setSearchTerm} />
+            <TreatmentFilter filters={filters} onChange={setFilters} />
+          </div>
 
-      {/* Modal Form Bệnh nhân - Patient Form Modal */}
+          {/* Thông tin kết quả */}
+          <div className="results-info">
+            {loading ? (
+              <span>{t('loading.appointments')}</span>
+            ) : (
+              <>
+                <span className="results-count">
+                  {t(appointments.length === 1 ? 'search.resultsSingle' : 'search.resultsCount',
+                     { count: appointments.length })}
+                </span>
+                {hasActiveFilters && (
+                  <span className="filter-indicator">
+                    {t('search.filtered')}
+                    {debouncedSearchTerm && ` ${t('search.filteredBy', { term: debouncedSearchTerm })}`}
+                    {getActiveFilterCount() > 0 &&
+                      ` ${t(getActiveFilterCount() > 1 ? 'search.filteredAnd' : 'search.filteredAndSingle',
+                           { count: getActiveFilterCount() })}`}
+                    )
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Màn hình chào mừng */}
+          {!loading && appointments.length === 0 && isInitialLoad && (
+            <div className="no-data empty-state-initial">
+              <div className="no-data-icon">{t('empty.noData')}</div>
+              <h3>{t('empty.welcome')}</h3>
+              <p>{t('empty.getStarted')}</p>
+              <div className="empty-state-actions">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowPatientForm(true)}
+                >
+                  {t('buttons.addFirstPatient')}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Bảng lịch hẹn */}
+          <AppointmentTable
+            appointments={appointments}
+            loading={loading}
+            onEdit={handleEditAppointment}
+            onDelete={handleDeleteAppointment}
+            onRefresh={fetchAppointments}
+          />
+        </main>
+      )}
+
+      {/* ── TAB 2: Bệnh nhân ────────────────────────────────────── */}
+      {activeTab === 'patients' && (
+        <main className="app-main">
+          <div className="action-buttons">
+            <button className="btn btn-primary" onClick={handleNewPatient}>
+              {t('buttons.newPatient')}
+            </button>
+          </div>
+
+          {patientsLoading && patients.length === 0 ? (
+            <div className="loading">{t('loading.patients')}</div>
+          ) : (
+            <PatientTable
+              patients={patients}
+              appointments={appointments}
+              onEdit={handleEditPatientFromTable}
+              onRefresh={handlePatientTableRefresh}
+            />
+          )}
+        </main>
+      )}
+
+      {/* ── TAB 3: Doanh thu & Thuế ──────────────────────────────── */}
+      {activeTab === 'revenue' && (
+        <main className="app-main">
+          <RevenueTabView />
+        </main>
+      )}
+
+      {/* Modal Bệnh nhân */}
       <Modal
         isOpen={showPatientForm}
         onClose={handleClosePatientForm}
@@ -414,7 +492,7 @@ function App() {
         />
       </Modal>
 
-      {/* Modal Form Lịch hẹn - Appointment Form Modal */}
+      {/* Modal Lịch hẹn */}
       <Modal
         isOpen={showAppointmentForm}
         onClose={handleCloseAppointmentForm}

@@ -75,10 +75,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 			+ "p.phone LIKE CONCAT('%', CAST(:search AS string), '%')) "
 			+ "AND (:needsImplant IS NULL OR a.needsImplant = :needsImplant) "
 			+ "AND (:needsDenture IS NULL OR a.needsDenture = :needsDenture) "
-			+ "AND (:needsOrthodontics IS NULL OR a.needsOrthodontics = :needsOrthodontics)")
+			+ "AND (:needsOrthodontics IS NULL OR a.needsOrthodontics = :needsOrthodontics) "
+			+ "AND (:isBeauty IS NULL OR a.isBeauty = :isBeauty)")
 	List<AppointmentWithPatientDTO> findAppointmentsWithPatients(@Param("search") String search,
 			@Param("needsImplant") Boolean needsImplant, @Param("needsDenture") Boolean needsDenture,
-			@Param("needsOrthodontics") Boolean needsOrthodontics);
+			@Param("needsOrthodontics") Boolean needsOrthodontics, @Param("isBeauty") Boolean isBeauty);
 
 	// -----------------------------------------------------------------------
 	// Revenue aggregation queries — added Session 2

@@ -286,7 +286,7 @@ function S1aHkdLedgerView() {
                       <td className="s1a-desc-cell">
                         {entry.description}
                         {entry.isBeauty && (
-                          <span className="beauty-badge screen-only">TM</span>
+                          <span className="beauty-badge screen-only"> (Thẩm Mỹ) </span>
                         )}
                       </td>
                       <td className="s1a-amount-cell">{formatNumber(entry.amount)}</td>

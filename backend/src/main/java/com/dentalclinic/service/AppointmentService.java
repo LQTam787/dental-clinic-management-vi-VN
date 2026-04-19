@@ -185,9 +185,10 @@ public class AppointmentService {
      * @return List of AppointmentWithPatientDTO matching the criteria
      */
     public List<AppointmentWithPatientDTO> getAppointmentsWithPatients(
-            String search, Boolean needsImplant, Boolean needsDenture, Boolean needsOrthodontics) {
-        
+            String search, Boolean needsImplant, Boolean needsDenture,
+            Boolean needsOrthodontics, Boolean isBeauty) {
+
         return appointmentRepository.findAppointmentsWithPatients(
-            search, needsImplant, needsDenture, needsOrthodontics);
+            search, needsImplant, needsDenture, needsOrthodontics, isBeauty);
     }
 }

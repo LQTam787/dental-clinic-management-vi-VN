@@ -5,7 +5,7 @@ import { t } from '../utils/i18n';
  * TreatmentFilter Component - Vietnamese Localized
  * Bộ lọc điều trị
  *
- * Provides checkbox filters for treatment needs.
+ * Provides checkbox filters for treatment needs and appointment type.
  * Implements three-state logic: unchecked (null), checked (true), unchecked again (null)
  * This allows "show all", "show only with treatment", filtering.
  *
@@ -16,6 +16,7 @@ import { t } from '../utils/i18n';
  * @param {boolean|null} props.filters.needsImplant - Implant filter
  * @param {boolean|null} props.filters.needsDenture - Denture filter
  * @param {boolean|null} props.filters.needsOrthodontics - Orthodontics filter
+ * @param {boolean|null} props.filters.isBeauty - Beauty/cosmetic appointment filter
  * @param {Function} props.onChange - Callback when filters change
  */
 function TreatmentFilter({ filters, onChange }) {
@@ -44,6 +45,7 @@ function TreatmentFilter({ filters, onChange }) {
       needsImplant: null,
       needsDenture: null,
       needsOrthodontics: null,
+      isBeauty: null,
     });
   };
 
@@ -54,7 +56,8 @@ function TreatmentFilter({ filters, onChange }) {
   const hasActiveFilters =
     filters.needsImplant !== null ||
     filters.needsDenture !== null ||
-    filters.needsOrthodontics !== null;
+    filters.needsOrthodontics !== null ||
+    filters.isBeauty !== null;
 
   return (
     <div className="treatment-filter">
@@ -89,6 +92,16 @@ function TreatmentFilter({ filters, onChange }) {
             onChange={() => handleCheckboxChange('needsOrthodontics')}
           />
           <span>{t('filter.needsOrthodontics')}</span>
+        </label>
+
+        {/* Beauty / Cosmetic Filter - Bộ lọc Thẩm mỹ */}
+        <label className="filter-checkbox filter-checkbox--beauty">
+          <input
+            type="checkbox"
+            checked={filters.isBeauty === true}
+            onChange={() => handleCheckboxChange('isBeauty')}
+          />
+          <span>{t('filter.isBeauty')}</span>
         </label>
       </div>
 

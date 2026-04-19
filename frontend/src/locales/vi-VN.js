@@ -162,6 +162,7 @@ export const viVN = {
     needsImplant: 'Cần Implant',
     needsDenture: 'Cần hàm giả',
     needsOrthodontics: 'Cần chỉnh nha',
+    isBeauty: 'Thẩm mỹ',
     clearFilters: 'Xóa bộ lọc',
   },
 

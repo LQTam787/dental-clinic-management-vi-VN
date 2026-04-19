@@ -40,6 +40,7 @@ function App() {
     needsImplant: null,
     needsDenture: null,
     needsOrthodontics: null,
+    isBeauty: null,
   });
 
   // Trạng thái tải lần đầu
@@ -101,6 +102,7 @@ function App() {
         needsImplant: filters.needsImplant,
         needsDenture: filters.needsDenture,
         needsOrthodontics: filters.needsOrthodontics,
+        isBeauty: filters.isBeauty,
       };
       Object.keys(params).forEach(key => {
         if (params[key] === null || params[key] === '') delete params[key];
@@ -306,6 +308,7 @@ function App() {
     if (filters.needsImplant !== null) count++;
     if (filters.needsDenture !== null) count++;
     if (filters.needsOrthodontics !== null) count++;
+    if (filters.isBeauty !== null) count++;
     return count;
   };
 
@@ -313,7 +316,8 @@ function App() {
     debouncedSearchTerm ||
     filters.needsImplant !== null ||
     filters.needsDenture !== null ||
-    filters.needsOrthodontics !== null;
+    filters.needsOrthodontics !== null ||
+    filters.isBeauty !== null;
 
   // ============================================
   // RENDER

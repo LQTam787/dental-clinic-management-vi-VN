@@ -120,25 +120,28 @@ public class AppointmentController {
     /**
      * GET /api/appointments/with-patients
      * PRIMARY UI ENDPOINT
-     * 
-     * Retrieve appointments joined with patient data with optional filtering
-     * 
+     *
+     * Retrieve appointments joined with patient data with optional filtering.
+     *
      * Query Parameters (all optional):
      * - search: Filter by patient name OR phone (case-insensitive, partial match)
      * - needsImplant: Filter by implant requirement (true/false)
      * - needsDenture: Filter by denture requirement (true/false)
      * - needsOrthodontics: Filter by orthodontics requirement (true/false)
-     * 
+     * - isBeauty: Filter by appointment type — true = thẩm mỹ (taxable),
+     *             false = điều trị (non-taxable), omit = show all
+     *
      * Examples:
      * - GET /api/appointments/with-patients
      * - GET /api/appointments/with-patients?search=John
-     * - GET /api/appointments/with-patients?needsImplant=true
-     * - GET /api/appointments/with-patients?search=Jane&needsOrthodontics=true
-     * 
-     * @param search Search term for patient name or phone
-     * @param needsImplant Filter for implant requirement
-     * @param needsDenture Filter for denture requirement
+     * - GET /api/appointments/with-patients?isBeauty=true
+     * - GET /api/appointments/with-patients?search=Jane&needsOrthodontics=true&isBeauty=false
+     *
+     * @param search            Search term for patient name or phone
+     * @param needsImplant      Filter for implant requirement
+     * @param needsDenture      Filter for denture requirement
      * @param needsOrthodontics Filter for orthodontics requirement
+     * @param isBeauty          Filter for appointment type (beauty/cosmetic vs dental treatment)
      * @return List of appointments with patient data (DTOs)
      */
     @GetMapping("/with-patients")
@@ -146,11 +149,12 @@ public class AppointmentController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Boolean needsImplant,
             @RequestParam(required = false) Boolean needsDenture,
-            @RequestParam(required = false) Boolean needsOrthodontics) {
-        
+            @RequestParam(required = false) Boolean needsOrthodontics,
+            @RequestParam(required = false) Boolean isBeauty) {
+
         List<AppointmentWithPatientDTO> appointments = appointmentService.getAppointmentsWithPatients(
-            search, needsImplant, needsDenture, needsOrthodontics);
-        
+            search, needsImplant, needsDenture, needsOrthodontics, isBeauty);
+
         return ResponseEntity.ok(appointments);
     }
 }

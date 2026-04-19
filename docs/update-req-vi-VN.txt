@@ -1,0 +1,4 @@
+- thêm thông tin điều trị vào mục miêu tả
+- thêm checkbox điều trị hoặc thẩm mỹ vào giao diện quản lý lịch hẹn
+- thêm cột boolean điều trị hoặc thẩm mỹ vào bảng lịch hẹn trong csdl tương ứng với checkbox trong giao diện quản lý lịch hẹn
+- chỉnh sửa cơ chế tính thuế để chỉ tính thuế vào các lịch hẹn thẩm mỹ

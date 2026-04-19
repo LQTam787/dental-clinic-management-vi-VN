@@ -69,7 +69,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	 */
 	@Query("SELECT new com.dentalclinic.dto.AppointmentWithPatientDTO("
 			+ "a.id, a.date, a.diagnosis, a.treatment, a.needsImplant, "
-			+ "a.needsDenture, a.needsOrthodontics, a.fee, a.note, "
+			+ "a.needsDenture, a.needsOrthodontics, a.isBeauty, a.fee, a.note, "
 			+ "p.id, p.name, p.birthYear, p.gender, p.phone, p.address) " + "FROM Appointment a JOIN a.patient p "
 			+ "WHERE (:search IS NULL OR " + "LOWER(p.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')) OR "
 			+ "p.phone LIKE CONCAT('%', CAST(:search AS string), '%')) "
@@ -113,6 +113,22 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	@Query("SELECT COUNT(a) FROM Appointment a "
 			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month")
 	long countByYearAndMonth(@Param("year") int year, @Param("month") int month);
+
+	/**
+	 * Sum of fees for beauty-only appointments in a specific calendar month.
+	 *
+	 * <p>Only appointments with {@code is_beauty = true} are included. This is
+	 * the TNCN tax base: dental treatment services are exempt; only
+	 * beauty/cosmetic services are taxable under TNCN.
+	 *
+	 * @param year  4-digit calendar year
+	 * @param month 1-based month number (1 = January ... 12 = December)
+	 * @return Non-null sum of beauty-appointment fees; {@code BigDecimal.ZERO} when none exist
+	 */
+	@Query("SELECT COALESCE(SUM(COALESCE(a.fee, 0)), 0) FROM Appointment a "
+			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month "
+			+ "AND a.isBeauty = true")
+	BigDecimal sumBeautyFeeByYearAndMonth(@Param("year") int year, @Param("month") int month);
 
 	/**
 	 * Fetches all appointments with their associated patient for a given calendar

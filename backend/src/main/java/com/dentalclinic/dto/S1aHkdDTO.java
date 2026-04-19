@@ -96,13 +96,21 @@ public class S1aHkdDTO {
     // -----------------------------------------------------------------------
 
     /**
-     * Sum of all {@link S1aHkdEntryDTO#getAmount()} values.
-     * Shown in the "Tổng cộng" row. Never {@code null}.
+     * Sum of all {@link S1aHkdEntryDTO#getAmount()} values (all appointment
+     * types). Shown in the "Tổng cộng" row. Never {@code null}.
      */
     private BigDecimal totalRevenue;
 
     /**
-     * Estimated personal income tax: {@code totalRevenue × tncnRate}.
+     * Sum of fees for beauty-only ({@code isBeauty = true}) entries only.
+     * This is the TNCN tax base. Shown as a browser-only subtotal row;
+     * suppressed in {@code @media print} and excluded from Excel export.
+     * Never {@code null}.
+     */
+    private BigDecimal taxableRevenue;
+
+    /**
+     * Estimated personal income tax: {@code taxableRevenue × tncnRate}.
      * Rounded to 2 decimal places (HALF_UP). Displayed in the UI with a
      * disclaimer; suppressed in {@code @media print} output.
      */

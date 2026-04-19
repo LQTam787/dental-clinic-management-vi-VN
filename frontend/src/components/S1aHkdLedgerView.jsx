@@ -275,7 +275,7 @@ function S1aHkdLedgerView() {
             <tbody>
               {data.entries && data.entries.length > 0
                 ? data.entries.map((entry, idx) => (
-                    <tr key={idx}>
+                    <tr key={idx} className={entry.isBeauty ? 'entry-beauty' : ''}>
                       <td className="s1a-date-cell">
                         {entry.entryDate
                           ? new Date(entry.entryDate).toLocaleDateString('vi-VN', {
@@ -283,7 +283,12 @@ function S1aHkdLedgerView() {
                             })
                           : ''}
                       </td>
-                      <td className="s1a-desc-cell">{entry.description}</td>
+                      <td className="s1a-desc-cell">
+                        {entry.description}
+                        {entry.isBeauty && (
+                          <span className="beauty-badge screen-only">TM</span>
+                        )}
+                      </td>
                       <td className="s1a-amount-cell">{formatNumber(entry.amount)}</td>
                     </tr>
                   ))
@@ -304,6 +309,17 @@ function S1aHkdLedgerView() {
                   <strong>{formatNumber(data.totalRevenue)}</strong>
                 </td>
               </tr>
+              {Number(data.taxableRevenue ?? 0) > 0 && (
+                <tr className="s1a-taxable-row screen-only">
+                  <td />
+                  <td className="s1a-total-label s1a-taxable-label">
+                    Trong đó doanh thu chịu thuế TNCN
+                  </td>
+                  <td className="s1a-amount-cell s1a-taxable-amount">
+                    {formatNumber(data.taxableRevenue)}
+                  </td>
+                </tr>
+              )}
             </tfoot>
           </table>
 

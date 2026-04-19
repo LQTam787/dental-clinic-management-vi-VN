@@ -47,6 +47,9 @@ public class Appointment {
 	@Column(name = "needs_orthodontics")
 	private Boolean needsOrthodontics = false;
 
+	@Column(name = "is_beauty")
+	private Boolean isBeauty = false;
+
 	@Column(precision = 10, scale = 2)
 	private BigDecimal fee;
 

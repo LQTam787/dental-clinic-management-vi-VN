@@ -70,10 +70,11 @@ function AnnualSummaryTable() {
   const totals = months.reduce(
     (acc, m) => ({
       revenue: acc.revenue + Number(m.totalRevenue ?? 0),
+      taxable: acc.taxable + Number(m.taxableRevenue ?? 0),
       tncn: acc.tncn + Number(m.tncnAmount ?? 0),
       count: acc.count + Number(m.appointmentCount ?? 0),
     }),
-    { revenue: 0, tncn: 0, count: 0 }
+    { revenue: 0, taxable: 0, tncn: 0, count: 0 }
   );
 
   const isFutureMonth = (monthIdx) => {
@@ -98,7 +99,7 @@ function AnnualSummaryTable() {
     ws_data.push(['', '', '', '', '']);
 
     // ── TABLE HEADER ───────────────────────────────────────────────────
-    ws_data.push(['Tháng', 'Số lịch hẹn', 'Doanh thu', 'TNCN ước tính', 'Trạng thái']);
+    ws_data.push(['Tháng', 'Số lịch hẹn', 'Doanh thu', 'Doanh thu thẩm mỹ', 'TNCN ước tính', 'Trạng thái']);
 
     // ── DATA ROWS ──────────────────────────────────────────────────────
     months.forEach((m, idx) => {
@@ -121,6 +122,7 @@ function AnnualSummaryTable() {
         MONTH_NAMES[idx],
         future ? '' : (m.appointmentCount ?? 0),
         future ? '' : Number(m.totalRevenue ?? 0),
+        future ? '' : Number(m.taxableRevenue ?? 0),
         future ? '' : Number(m.tncnAmount ?? 0),
         status,
       ]);
@@ -131,6 +133,7 @@ function AnnualSummaryTable() {
       `Tổng cộng năm ${selectedYear}`,
       totals.count,
       totals.revenue,
+      totals.taxable,
       totals.tncn,
       '',
     ]);
@@ -142,14 +145,15 @@ function AnnualSummaryTable() {
       { wch: 14 },  // A: month
       { wch: 14 },  // B: count
       { wch: 20 },  // C: revenue
-      { wch: 20 },  // D: tncn
-      { wch: 24 },  // E: status
+      { wch: 22 },  // D: taxable revenue
+      { wch: 20 },  // E: tncn
+      { wch: 24 },  // F: status
     ];
 
-    // ── NUMBER FORMAT for revenue + tncn columns ───────────────────────
+    // ── NUMBER FORMAT for revenue + taxable + tncn columns ─────────────
     const dataRowStart = 5; // 1-based: row 5 is the first data row (after 3-line header + column headers)
     for (let r = dataRowStart; r <= dataRowStart + months.length; r++) {
-      ['C', 'D'].forEach(col => {
+      ['C', 'D', 'E'].forEach(col => {
         const cellRef = col + r;
         if (ws[cellRef] && typeof ws[cellRef].v === 'number') {
           ws[cellRef].t = 'n';
@@ -206,6 +210,7 @@ function AnnualSummaryTable() {
               <th>Tháng</th>
               <th className="ast-num">Số lịch hẹn</th>
               <th className="ast-num">Doanh thu</th>
+              <th className="ast-num">Doanh thu thẩm mỹ</th>
               <th className="ast-num">TNCN ước tính</th>
               <th>Trạng thái</th>
             </tr>
@@ -215,7 +220,7 @@ function AnnualSummaryTable() {
             {loading
               ? (
                 <tr>
-                  <td colSpan={5} className="ast-loading-cell">
+                  <td colSpan={6} className="ast-loading-cell">
                     <div className="ast-loading">Đang tải…</div>
                   </td>
                 </tr>
@@ -245,6 +250,10 @@ function AnnualSummaryTable() {
 
                       <td className="ast-num ast-revenue">
                         {future ? '—' : formatVND(m.totalRevenue)}
+                      </td>
+
+                      <td className="ast-num ast-taxable">
+                        {future ? '—' : formatVND(m.taxableRevenue)}
                       </td>
 
                       <td className="ast-num ast-tncn">
@@ -294,6 +303,7 @@ function AnnualSummaryTable() {
                 <td><strong>Tổng cộng năm {selectedYear}</strong></td>
                 <td className="ast-num"><strong>{totals.count}</strong></td>
                 <td className="ast-num ast-revenue"><strong>{formatVND(totals.revenue)}</strong></td>
+                <td className="ast-num ast-taxable"><strong>{formatVND(totals.taxable)}</strong></td>
                 <td className="ast-num ast-tncn"><strong>{formatVND(totals.tncn)}</strong></td>
                 <td />
               </tr>

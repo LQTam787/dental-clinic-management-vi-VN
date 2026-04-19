@@ -20,6 +20,7 @@ public class AppointmentWithPatientDTO {
     private Boolean needsImplant;
     private Boolean needsDenture;
     private Boolean needsOrthodontics;
+    private Boolean isBeauty;
     private BigDecimal fee;
     private String note;
     
@@ -40,8 +41,8 @@ public class AppointmentWithPatientDTO {
     public AppointmentWithPatientDTO(
             Long appointmentId, LocalDate date, String diagnosis, String treatment,
             Boolean needsImplant, Boolean needsDenture, Boolean needsOrthodontics,
-            BigDecimal fee, String note,
-            Long patientId, String patientName, Integer birthYear, 
+            Boolean isBeauty, BigDecimal fee, String note,
+            Long patientId, String patientName, Integer birthYear,
             String gender, String phone, String address) {
         this.appointmentId = appointmentId;
         this.date = date;
@@ -50,6 +51,7 @@ public class AppointmentWithPatientDTO {
         this.needsImplant = needsImplant;
         this.needsDenture = needsDenture;
         this.needsOrthodontics = needsOrthodontics;
+        this.isBeauty = isBeauty;
         this.fee = fee;
         this.note = note;
         this.patientId = patientId;
@@ -117,7 +119,15 @@ public class AppointmentWithPatientDTO {
     public void setNeedsOrthodontics(Boolean needsOrthodontics) {
         this.needsOrthodontics = needsOrthodontics;
     }
-    
+
+    public Boolean getIsBeauty() {
+        return isBeauty;
+    }
+
+    public void setIsBeauty(Boolean isBeauty) {
+        this.isBeauty = isBeauty;
+    }
+
     public BigDecimal getFee() {
         return fee;
     }
@@ -191,6 +201,7 @@ public class AppointmentWithPatientDTO {
                 ", phone='" + phone + '\'' +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", treatment='" + treatment + '\'' +
+                ", isBeauty=" + isBeauty +
                 ", fee=" + fee +
                 '}';
     }

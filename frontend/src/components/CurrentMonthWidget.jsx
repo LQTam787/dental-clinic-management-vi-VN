@@ -74,6 +74,11 @@ function CurrentMonthWidget() {
           <div className="cmw-stat-value">{data?.appointmentCount ?? 0}</div>
         </div>
 
+        <div className="cmw-stat cmw-stat--taxable">
+          <div className="cmw-stat-label">Doanh thu thẩm mỹ (chịu thuế)</div>
+          <div className="cmw-stat-value">{formatVND(data?.taxableRevenue)}</div>
+        </div>
+
         <div className="cmw-stat cmw-stat--tncn">
           <div className="cmw-stat-label">TNCN ước tính</div>
           <div className="cmw-stat-value">{formatVND(data?.tncnAmount)}</div>

@@ -36,7 +36,7 @@ public class MonthlyRevenueDTO {
     private int month;
 
     /**
-     * Total revenue for the period.
+     * Total revenue for the period — all appointments regardless of type.
      * {@code COALESCE(SUM(fee), 0)} — never {@code null}.
      */
     private BigDecimal totalRevenue;
@@ -45,8 +45,15 @@ public class MonthlyRevenueDTO {
     private int appointmentCount;
 
     /**
+     * Sum of fees for beauty-only ({@code is_beauty = true}) appointments.
+     * This is the TNCN tax base; dental treatment fees are exempt.
+     * Never {@code null}.
+     */
+    private BigDecimal taxableRevenue;
+
+    /**
      * Personal income tax estimate:
-     * {@code totalRevenue × tncnRate} at the time this DTO was built.
+     * {@code taxableRevenue × tncnRate} at the time this DTO was built.
      * For finalized months this is the rate that was in effect at
      * finalization time.
      */

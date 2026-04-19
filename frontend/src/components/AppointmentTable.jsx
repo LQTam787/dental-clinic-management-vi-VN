@@ -75,6 +75,7 @@ function AppointmentTable({ appointments, loading, onEdit, onDelete }) {
             <th>{t('table.needs.implant')}</th>
             <th>{t('table.needs.denture')}</th>
             <th>{t('table.needs.orthodontics')}</th>
+            <th>{t('appointment.fields.isBeauty')}</th>
             <th>{t('table.headers.fee')}</th>
             <th>{t('table.headers.note')}</th>
             <th>{t('table.headers.actions')}</th>
@@ -112,6 +113,13 @@ function AppointmentTable({ appointments, loading, onEdit, onDelete }) {
               <td className="text-center">{apt.needsDenture ? '✓' : t('table.needs.none')}</td>
               <td className="text-center">
                 {apt.needsOrthodontics ? '✓' : t('table.needs.none')}
+              </td>
+
+              {/* Beauty / Taxable */}
+              <td className="text-center">
+                {apt.isBeauty
+                  ? <span className="beauty-tag">Thẩm mỹ</span>
+                  : t('table.needs.none')}
               </td>
 
               {/* Fee - Using Vietnamese currency formatter */}

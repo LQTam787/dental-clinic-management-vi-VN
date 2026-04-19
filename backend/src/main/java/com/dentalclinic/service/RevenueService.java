@@ -246,12 +246,16 @@ public class RevenueService {
         if (totalRevenue == null)
             totalRevenue = BigDecimal.ZERO;
 
+        BigDecimal taxableRevenue = appointmentRepository.sumBeautyFeeByYearAndMonth(year, month);
+        if (taxableRevenue == null)
+            taxableRevenue = BigDecimal.ZERO;
+
         long appointmentCount = appointmentRepository.countByYearAndMonth(year, month);
 
-        // Lock in the current TNCN rate
+        // Lock in the current TNCN rate; apply only to beauty-only (taxable) revenue
         ClinicSettings settings = settingsService.getSettings();
         BigDecimal tncnRate = settings.getTncnRate();
-        BigDecimal tncnAmount = totalRevenue.multiply(tncnRate)
+        BigDecimal tncnAmount = taxableRevenue.multiply(tncnRate)
                 .setScale(2, RoundingMode.HALF_UP);
 
         LocalDateTime now = LocalDateTime.now();
@@ -261,6 +265,7 @@ public class RevenueService {
         record.setYear(year);
         record.setMonth(month);
         record.setTotalRevenue(totalRevenue);
+        record.setTaxableRevenue(taxableRevenue);
         record.setAppointmentCount((int) appointmentCount);
         record.setTncnAmount(tncnAmount);
         record.setFinalized(true);
@@ -324,19 +329,26 @@ public class RevenueService {
 
         List<S1aHkdEntryDTO> entries = new ArrayList<>(rows.size());
         BigDecimal totalRevenue = BigDecimal.ZERO;
+        BigDecimal taxableRevenue = BigDecimal.ZERO;
 
         for (Object[] row : rows) {
             Appointment appt = (Appointment) row[0];
             Patient patient = (Patient) row[1];
 
             BigDecimal amount = appt.getFee() != null ? appt.getFee() : BigDecimal.ZERO;
-            String description = "Dịch vụ nha khoa — " + patient.getName();
+            String treatment = appt.getTreatment();
+            String description = "Dịch vụ nha khoa - " + patient.getName()
+                    + (treatment != null && !treatment.isBlank() ? " - " + treatment : "");
+            boolean beauty = Boolean.TRUE.equals(appt.getIsBeauty());
 
-            entries.add(new S1aHkdEntryDTO(appt.getDate(), description, amount));
+            entries.add(new S1aHkdEntryDTO(appt.getDate(), description, amount, beauty));
             totalRevenue = totalRevenue.add(amount);
+            if (beauty) {
+                taxableRevenue = taxableRevenue.add(amount);
+            }
         }
 
-        BigDecimal tncnAmount = totalRevenue
+        BigDecimal tncnAmount = taxableRevenue
                 .multiply(settings.getTncnRate())
                 .setScale(2, RoundingMode.HALF_UP);
 
@@ -354,6 +366,7 @@ public class RevenueService {
                 settings.getCurrencyUnit() != null ? settings.getCurrencyUnit() : "VNĐ",
                 entries,
                 totalRevenue,
+                taxableRevenue,
                 tncnAmount,
                 signatureDate);
     }
@@ -371,30 +384,37 @@ public class RevenueService {
         if (totalRevenue == null)
             totalRevenue = BigDecimal.ZERO;
 
+        BigDecimal taxableRevenue = appointmentRepository.sumBeautyFeeByYearAndMonth(year, month);
+        if (taxableRevenue == null)
+            taxableRevenue = BigDecimal.ZERO;
+
         long appointmentCount = appointmentRepository.countByYearAndMonth(year, month);
 
         ClinicSettings settings = settingsService.getSettings();
-        BigDecimal tncnAmount = totalRevenue.multiply(settings.getTncnRate())
+        BigDecimal tncnAmount = taxableRevenue.multiply(settings.getTncnRate())
                 .setScale(2, RoundingMode.HALF_UP);
 
         return new MonthlyRevenueDTO(
                 year, month, totalRevenue, (int) appointmentCount,
-                tncnAmount, false, null);
+                taxableRevenue, tncnAmount, false, null);
     }
 
     /** Returns a zero-value DTO for a future month (no appointments yet). */
     private MonthlyRevenueDTO buildZeroDTO(int year, int month) {
         return new MonthlyRevenueDTO(
-                year, month, BigDecimal.ZERO, 0, BigDecimal.ZERO, false, null);
+                year, month, BigDecimal.ZERO, 0, BigDecimal.ZERO, BigDecimal.ZERO, false, null);
     }
 
     /** Converts a finalized {@link MonthlyRevenue} entity to a DTO. */
     private MonthlyRevenueDTO toDTO(MonthlyRevenue entity) {
+        BigDecimal taxableRevenue = entity.getTaxableRevenue() != null
+                ? entity.getTaxableRevenue() : BigDecimal.ZERO;
         return new MonthlyRevenueDTO(
                 entity.getYear(),
                 entity.getMonth(),
                 entity.getTotalRevenue(),
                 entity.getAppointmentCount(),
+                taxableRevenue,
                 entity.getTncnAmount(),
                 entity.getFinalized(),
                 entity.getFinalizedAt());

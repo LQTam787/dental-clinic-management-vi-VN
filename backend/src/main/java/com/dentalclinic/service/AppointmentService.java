@@ -112,6 +112,7 @@ public class AppointmentService {
         appointment.setNeedsImplant(appointmentDetails.getNeedsImplant());
         appointment.setNeedsDenture(appointmentDetails.getNeedsDenture());
         appointment.setNeedsOrthodontics(appointmentDetails.getNeedsOrthodontics());
+        appointment.setIsBeauty(appointmentDetails.getIsBeauty());
         appointment.setFee(appointmentDetails.getFee());
         appointment.setNote(appointmentDetails.getNote());
         

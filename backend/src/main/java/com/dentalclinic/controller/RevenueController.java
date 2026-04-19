@@ -203,6 +203,7 @@ public class RevenueController {
                 finalized.getMonth(),
                 finalized.getTotalRevenue(),
                 finalized.getAppointmentCount(),
+                finalized.getTaxableRevenue(),
                 finalized.getTncnAmount(),
                 finalized.getFinalized(),
                 finalized.getFinalizedAt());

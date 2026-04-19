@@ -1,0 +1,4 @@
+- add treatment information into the description column
+- add checkbox for treatment or beauty into appointments management interface
+- add boolean column for treatment or beauty into appointments table in db tied to the checkbox in the interface
+- modify tax counting mechanism to only tax beauty appointments

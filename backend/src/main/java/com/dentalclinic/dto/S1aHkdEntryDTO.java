@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
  * <ul>
  * <li><strong>Cột A — Ngày tháng:</strong> {@code entryDate}</li>
  * <li><strong>Cột B — Diễn giải:</strong> {@code description}
- * (format: {@code "Dịch vụ nha khoa — [tên bệnh nhân]"})</li>
+ * (format: {@code "Dịch vụ nha khoa - [tên bệnh nhân]"} or
+ * {@code "Dịch vụ nha khoa - [tên bệnh nhân] - [điều trị]"})</li>
  * <li><strong>Cột 1 — Số tiền:</strong> {@code amount}
  * ({@code COALESCE(appointments.fee, 0)} — never null)</li>
  * </ul>
@@ -35,8 +36,9 @@ public class S1aHkdEntryDTO {
 
     /**
      * Cột B — narrative description.
-     * Always {@code "Dịch vụ nha khoa — <patientName>"} per the confirmed
-     * per-appointment granularity decision (03/04/2026).
+     * Format: {@code "Dịch vụ nha khoa - <patientName>"} when treatment is
+     * blank, or {@code "Dịch vụ nha khoa - <patientName> - <treatment>"}
+     * when treatment has a value. Uses regular hyphens (U+002D) only.
      */
     private String description;
 
@@ -47,4 +49,12 @@ public class S1aHkdEntryDTO {
      * responsibility.
      */
     private BigDecimal amount;
+
+    /**
+     * Whether this appointment is a beauty/cosmetic service ({@code true})
+     * or a dental treatment service ({@code false}).
+     * Used by the frontend for browser-only visual distinction (badge, row
+     * highlight). Must NOT appear in print/PDF or Excel output.
+     */
+    private Boolean isBeauty;
 }

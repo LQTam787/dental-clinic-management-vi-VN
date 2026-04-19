@@ -39,6 +39,7 @@ function AppointmentForm({ appointment, onClose, onSave }) {
     needsImplant: false,
     needsDenture: false,
     needsOrthodontics: false,
+    isBeauty: false,
     fee: '',
     note: '',
   });
@@ -80,6 +81,7 @@ function AppointmentForm({ appointment, onClose, onSave }) {
         needsImplant: appointment.needsImplant || false,
         needsDenture: appointment.needsDenture || false,
         needsOrthodontics: appointment.needsOrthodontics || false,
+        isBeauty: appointment.isBeauty || false,
         fee: appointment.fee || '',
         note: appointment.note || '',
       });
@@ -199,6 +201,7 @@ function AppointmentForm({ appointment, onClose, onSave }) {
         needsImplant: formData.needsImplant,
         needsDenture: formData.needsDenture,
         needsOrthodontics: formData.needsOrthodontics,
+        isBeauty: formData.isBeauty,
         fee: formData.fee ? parseFloat(formData.fee) : null,
         note: formData.note || null,
         patient: {
@@ -362,6 +365,26 @@ function AppointmentForm({ appointment, onClose, onSave }) {
             <span>{t('appointment.fields.needsOrthodontics')}</span>
           </label>
         </div>
+      </div>
+
+      {/* Beauty / Taxable Checkbox */}
+      <div className="form-group">
+        <label className="form-label">Loại dịch vụ</label>
+        <div className="checkbox-group">
+          <label className="checkbox-label checkbox-label--beauty">
+            <input
+              type="checkbox"
+              name="isBeauty"
+              checked={formData.isBeauty}
+              onChange={handleChange}
+              disabled={loading}
+            />
+            <span>{t('appointment.fields.isBeauty')}</span>
+          </label>
+        </div>
+        <span className="form-hint">
+          Chỉ dịch vụ thẩm mỹ mới được tính thuế TNCN. Điều trị nha khoa được miễn thuế.
+        </span>
       </div>
 
       {/* Fee Field */}

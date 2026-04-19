@@ -112,6 +112,7 @@ export const viVN = {
       needsImplant: 'Cần Implant',
       needsDenture: 'Cần hàm giả',
       needsOrthodontics: 'Cần chỉnh nha',
+      isBeauty: 'Thẩm mỹ (chịu thuế TNCN)',
     },
     validation: {
       patientRequired: 'Vui lòng chọn bệnh nhân',
@@ -276,6 +277,7 @@ export const viVN = {
     finalizeMonth: 'Chốt sổ tháng',
     printForm: 'In sổ',
     exportExcel: 'Xuất Excel',
+    taxableRevenue: 'Doanh thu thẩm mỹ (chịu thuế)',
   },
 
   // S1a-HKD form labels
@@ -295,7 +297,9 @@ export const viVN = {
     total: 'Tổng cộng',
     signatureTitle: 'NGƯỜI ĐẠI DIỆN HỘ KINH DOANH/\nCÁ NHÂN KINH DOANH',
     signatureInstruction: '(Ký, ghi rõ họ tên, đóng dấu (nếu có))',
-    entryDescription: 'Dịch vụ nha khoa —',
+    entryDescription: 'Dịch vụ nha khoa -',
+    taxableRevenue: 'Doanh thu chịu thuế (thẩm mỹ)',
+    beautyBadge: 'TM',
   },
 
   // TNCN disclaimer

@@ -28,9 +28,10 @@ import lombok.NoArgsConstructor;
  * and is not updated retroactively when appointments are later edited.
  *
  * <p>The {@code tncnAmount} is computed as
- * {@code totalRevenue × tncn_rate} at the moment of finalization and stored
- * here. Changing the TNCN rate in {@link ClinicSettings} does not alter
- * previously finalized rows.
+ * {@code taxableRevenue × tncn_rate} at the moment of finalization and stored
+ * here, where {@code taxableRevenue} is the sum of fees for beauty-only
+ * appointments. Changing the TNCN rate in {@link ClinicSettings} does not
+ * alter previously finalized rows.
  */
 @Entity
 @Table(
@@ -69,8 +70,16 @@ public class MonthlyRevenue {
     private Integer appointmentCount = 0;
 
     /**
+     * Sum of fees for beauty-only ({@code is_beauty = true}) appointments in
+     * this period. This is the TNCN tax base: only beauty/cosmetic services
+     * are taxable; dental treatment services are exempt.
+     */
+    @Column(name = "taxable_revenue", precision = 15, scale = 2)
+    private BigDecimal taxableRevenue = BigDecimal.ZERO;
+
+    /**
      * Personal income tax (thuế TNCN) amount:
-     * {@code totalRevenue × ClinicSettings.tncnRate} at finalization time.
+     * {@code taxableRevenue × ClinicSettings.tncnRate} at finalization time.
      */
     @Column(name = "tncn_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal tncnAmount = BigDecimal.ZERO;

@@ -2555,22 +2555,24 @@ select.form-input {
   cursor: not-allowed;
 }
 
+/* Colors mirror the appointment table's .actions-cell buttons
+   (solid green "Sửa" / solid red "Xóa"). */
 .btn-sm.btn-edit {
-  background: rgba(102, 126, 234, 0.12);
-  color: #667eea;
+  background: #4caf50;
+  color: white;
 }
 
 .btn-sm.btn-edit:hover:not(:disabled) {
-  background: rgba(102, 126, 234, 0.22);
+  background: #45a049;
 }
 
 .btn-sm.btn-delete {
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
+  background: #ef5350;
+  color: white;
 }
 
 .btn-sm.btn-delete:hover:not(:disabled) {
-  background: rgba(220, 53, 69, 0.2);
+  background: #da190b;
 }
 
 /* No results cell */

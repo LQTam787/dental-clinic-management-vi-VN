@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { t } from '../utils/i18n';
 import { formatDate, formatCurrency } from '../utils/formatters';
+import usePagination from '../hooks/usePagination';
+import Pagination from './Pagination';
 
 /**
  * AppointmentTable Component - Vietnamese Localized
@@ -18,7 +20,16 @@ import { formatDate, formatCurrency } from '../utils/formatters';
  * @param {Function} props.onEdit - Callback when edit button clicked
  * @param {Function} props.onDelete - Callback when delete button clicked
  */
-function AppointmentTable({ appointments, loading, onEdit, onDelete }) {
+function AppointmentTable({ appointments, loading, onEdit, onDelete, resetKey = '' }) {
+  // Pagination (hooks must run before any early return)
+  const { pageItems, page, pageSize, totalPages, total, setPage, setPageSize } =
+    usePagination(appointments, resetKey);
+  const topRef = useRef(null);
+  const goToPage = p => {
+    setPage(p);
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   // ============================================
   // HELPER FUNCTIONS
   // ============================================
@@ -59,6 +70,8 @@ function AppointmentTable({ appointments, loading, onEdit, onDelete }) {
   // TABLE RENDERING
   // ============================================
   return (
+    <>
+    <div ref={topRef} />
     <div className="appointment-table-container">
       <table className="appointment-table">
         {/* Table Header */}
@@ -84,7 +97,7 @@ function AppointmentTable({ appointments, loading, onEdit, onDelete }) {
 
         {/* Table Body */}
         <tbody>
-          {appointments.map(apt => (
+          {pageItems.map(apt => (
             <tr key={apt.appointmentId}>
               {/* Date - Using Vietnamese formatter */}
               <td>{formatDate(apt.date)}</td>
@@ -154,6 +167,15 @@ function AppointmentTable({ appointments, loading, onEdit, onDelete }) {
         </tbody>
       </table>
     </div>
+    <Pagination
+      page={page}
+      pageSize={pageSize}
+      totalPages={totalPages}
+      total={total}
+      onPageChange={goToPage}
+      onPageSizeChange={setPageSize}
+    />
+    </>
   );
 }
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { patientAPI } from '../services/api';
 import { t } from '../utils/i18n';
 import SearchBar from './SearchBar';
+import usePagination from '../hooks/usePagination';
+import Pagination from './Pagination';
 
 /**
  * PatientTable - Bảng danh sách bệnh nhân (Tab 2)
@@ -37,6 +39,15 @@ function PatientTable({ patients, appointments, onEdit, onRefresh }) {
         (p.phone || '').toLowerCase().includes(term)
     );
   }, [patients, searchTerm]);
+
+  // ── Pagination (resets to page 1 whenever the search term changes) ──────
+  const { pageItems, page, pageSize, totalPages, total, offset, setPage, setPageSize } =
+    usePagination(filtered, searchTerm);
+  const topRef = React.useRef(null);
+  const goToPage = p => {
+    setPage(p);
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // ── Delete handler ───────────────────────────────────────────────────────
   const handleDelete = async patient => {
@@ -124,6 +135,7 @@ function PatientTable({ patients, appointments, onEdit, onRefresh }) {
       </div>
 
       {/* Table */}
+      <div ref={topRef} />
       <div className="patient-table-container">
         <table className="patient-table">
           <thead>
@@ -146,12 +158,12 @@ function PatientTable({ patients, appointments, onEdit, onRefresh }) {
                 </td>
               </tr>
             ) : (
-              filtered.map((patient, index) => {
+              pageItems.map((patient, index) => {
                 const count = appointmentCountMap[patient.id] || 0;
                 const isDeleting = deletingId === patient.id;
                 return (
                   <tr key={patient.id} className={isDeleting ? 'row-deleting' : ''}>
-                    <td className="col-stt">{index + 1}</td>
+                    <td className="col-stt">{offset + index + 1}</td>
                     <td className="patient-name-cell">{patient.name}</td>
                     <td className="col-narrow">{patient.birthYear}</td>
                     <td className="col-narrow">{formatGender(patient.gender)}</td>
@@ -189,6 +201,14 @@ function PatientTable({ patients, appointments, onEdit, onRefresh }) {
           </tbody>
         </table>
       </div>
+      <Pagination
+        page={page}
+        pageSize={pageSize}
+        totalPages={totalPages}
+        total={total}
+        onPageChange={goToPage}
+        onPageSizeChange={setPageSize}
+      />
     </div>
   );
 }

@@ -171,6 +171,18 @@ export const viVN = {
     closeAriaLabel: 'Đóng cửa sổ',
   },
 
+  // Pagination
+  pagination: {
+    showing: 'Hiển thị {from}–{to} / {total}',
+    pageSize: 'Số dòng mỗi trang:',
+    first: 'Trang đầu',
+    prev: 'Trang trước',
+    next: 'Trang sau',
+    last: 'Trang cuối',
+    page: 'Trang {page}',
+    pageOf: 'Trang {page} / {pages}',
+  },
+
   // Appointment Table
   table: {
     headers: {

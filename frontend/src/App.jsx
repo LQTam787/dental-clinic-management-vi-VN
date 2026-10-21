@@ -447,6 +447,7 @@ function App() {
             onEdit={handleEditAppointment}
             onDelete={handleDeleteAppointment}
             onRefresh={fetchAppointments}
+            resetKey={`${debouncedSearchTerm}|${JSON.stringify(filters)}`}
           />
         </main>
       )}

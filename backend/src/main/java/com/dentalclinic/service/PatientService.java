@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dentalclinic.exception.DuplicatePhoneException;
 import com.dentalclinic.exception.ResourceNotFoundException;
 import com.dentalclinic.model.Patient;
 import com.dentalclinic.repository.PatientRepository;
@@ -38,7 +39,7 @@ public class PatientService {
 	 * @return List of all patients (empty list if none exist)
 	 */
 	public List<Patient> getAllPatients() {
-		return patientRepository.findAll();
+		return patientRepository.findAll(org.springframework.data.domain.Sort.by("id").descending());
 	}
 
 	/**

@@ -76,7 +76,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 			+ "AND (:needsImplant IS NULL OR a.needsImplant = :needsImplant) "
 			+ "AND (:needsDenture IS NULL OR a.needsDenture = :needsDenture) "
 			+ "AND (:needsOrthodontics IS NULL OR a.needsOrthodontics = :needsOrthodontics) "
-			+ "AND (:isBeauty IS NULL OR a.isBeauty = :isBeauty)")
+			+ "AND (:isBeauty IS NULL OR a.isBeauty = :isBeauty) " + "ORDER BY a.date DESC, a.id DESC")
 	List<AppointmentWithPatientDTO> findAppointmentsWithPatients(@Param("search") String search,
 			@Param("needsImplant") Boolean needsImplant, @Param("needsDenture") Boolean needsDenture,
 			@Param("needsOrthodontics") Boolean needsOrthodontics, @Param("isBeauty") Boolean isBeauty);
@@ -89,16 +89,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	/**
 	 * Sum of all appointment fees for a specific calendar month.
 	 *
-	 * <p>Uses {@code COALESCE} at two levels:
+	 * <p>
+	 * Uses {@code COALESCE} at two levels:
 	 * <ul>
-	 *   <li>Inner {@code COALESCE(a.fee, 0)} — treats NULL fees as zero.</li>
-	 *   <li>Outer {@code COALESCE(SUM(...), 0)} — returns zero rather than NULL
-	 *       when there are no appointments in the period.</li>
+	 * <li>Inner {@code COALESCE(a.fee, 0)} — treats NULL fees as zero.</li>
+	 * <li>Outer {@code COALESCE(SUM(...), 0)} — returns zero rather than NULL when
+	 * there are no appointments in the period.</li>
 	 * </ul>
 	 *
 	 * @param year  4-digit calendar year
 	 * @param month 1-based month number (1 = January … 12 = December)
-	 * @return Non-null sum of fees; {@code BigDecimal.ZERO} when no appointments exist
+	 * @return Non-null sum of fees; {@code BigDecimal.ZERO} when no appointments
+	 *         exist
 	 */
 	@Query("SELECT COALESCE(SUM(COALESCE(a.fee, 0)), 0) FROM Appointment a "
 			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month")
@@ -118,13 +120,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	/**
 	 * Sum of fees for beauty-only appointments in a specific calendar month.
 	 *
-	 * <p>Only appointments with {@code is_beauty = true} are included. This is
-	 * the TNCN tax base: dental treatment services are exempt; only
-	 * beauty/cosmetic services are taxable under TNCN.
+	 * <p>
+	 * Only appointments with {@code is_beauty = true} are included. This is the
+	 * TNCN tax base: dental treatment services are exempt; only beauty/cosmetic
+	 * services are taxable under TNCN.
 	 *
 	 * @param year  4-digit calendar year
 	 * @param month 1-based month number (1 = January ... 12 = December)
-	 * @return Non-null sum of beauty-appointment fees; {@code BigDecimal.ZERO} when none exist
+	 * @return Non-null sum of beauty-appointment fees; {@code BigDecimal.ZERO} when
+	 *         none exist
 	 */
 	@Query("SELECT COALESCE(SUM(COALESCE(a.fee, 0)), 0) FROM Appointment a "
 			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month "
@@ -135,7 +139,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	 * Fetches all appointments with their associated patient for a given calendar
 	 * month, ordered by date ASC then patient name ASC.
 	 *
-	 * <p>Used by {@link com.dentalclinic.service.RevenueService#getS1aHkdData}
+	 * <p>
+	 * Used by {@link com.dentalclinic.service.RevenueService#getS1aHkdData}
 	 * (Session 3) to build the per-row entries of the S1a-HKD ledger.
 	 *
 	 * @param year  4-digit calendar year
@@ -146,6 +151,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	@Query("SELECT a, p FROM Appointment a JOIN a.patient p "
 			+ "WHERE EXTRACT(YEAR FROM a.date) = :year AND EXTRACT(MONTH FROM a.date) = :month "
 			+ "ORDER BY a.date ASC, p.name ASC")
-	List<Object[]> findAppointmentsWithPatientsByYearAndMonth(
-			@Param("year") int year, @Param("month") int month);
+	List<Object[]> findAppointmentsWithPatientsByYearAndMonth(@Param("year") int year, @Param("month") int month);
 }

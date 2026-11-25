@@ -7,6 +7,8 @@
 **Date drafted:** 03/04/2026  
 **Status:** Planning complete — ready for Session 1
 
+> **AMENDMENT — Manual-only finalization:** The `MonthlyFinalizationJob` (`@Scheduled`, midnight on the 1st) and `@EnableScheduling` have been removed. Month finalization is now always triggered manually from the Revenue & Tax tab (`POST /api/revenue/finalize/{year}/{month}`). The finalization logic, idempotency, live current-month totals and the "Chưa chốt sổ" badge are unchanged. Wherever this document or the session scripts describe the scheduled job, treat that as superseded.
+
 ---
 
 ## Table of Contents

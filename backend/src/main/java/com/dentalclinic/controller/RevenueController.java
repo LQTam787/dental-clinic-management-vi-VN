@@ -183,9 +183,9 @@ public class RevenueController {
      * finalization occurred.
      *
      * <p>
-     * Normal flow: the {@code MonthlyFinalizationJob} fires automatically at
-     * midnight on the 1st of every month. Use this endpoint to manually trigger
-     * finalization if the scheduler missed a run (e.g. server was offline).
+     * Finalization is always manual: there is no scheduled job. The user
+     * triggers it from the Revenue & Tax tab (the "Chốt sổ" button shown next to
+     * the "Chưa chốt sổ" badge for past, unfinalized months).
      *
      * @param year  4-digit calendar year
      * @param month 1-based month number (1–12)

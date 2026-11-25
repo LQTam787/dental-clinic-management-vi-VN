@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
  * Finalized monthly revenue snapshot.
  *
  * <p>One row is written per calendar month when that month is finalized
- * (either by the scheduled job on the 1st or by the manual finalization
- * endpoint). The {@code UNIQUE(year, month)} database constraint makes
+ * (manually, via the finalization endpoint triggered from the Revenue & Tax
+ * tab; there is no automatic scheduler). The {@code UNIQUE(year, month)} database constraint makes
  * finalization idempotent.
  *
  * <p>Importantly, this table stores <em>snapshots</em>. Appointment data is

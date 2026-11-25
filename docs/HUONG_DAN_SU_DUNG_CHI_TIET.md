@@ -697,7 +697,7 @@ Thử từ khóa khác hoặc bỏ lọc.
 - Khi chốt, hệ thống lưu tổng doanh thu và TNCN tại thời điểm đó vào cơ sở dữ liệu.
 - Các lịch hẹn gốc **luôn được giữ nguyên**.
 - Tháng đã chốt hiển thị biểu tượng 🔒 và ngày chốt.
-- Chốt sổ tự động vào **ngày 1 hàng tháng** lúc nửa đêm. Nếu server bị tắt vào ngày đó, dùng nút **"Chốt sổ"** thủ công trong tab **Tổng theo năm**.
+- Hệ thống **không tự động chốt sổ**. Bạn cần chốt thủ công từng tháng bằng nút **"Chốt sổ"** trong tab **Doanh thu & Thuế → Tổng theo năm**. Tháng đã qua mà chưa chốt sẽ hiển thị cảnh báo **"Chưa chốt sổ"**.
 
 ### Q14: Sổ S1a-HKD là gì? Bắt buộc không?
 
@@ -882,7 +882,7 @@ Dòng cuối bảng: **Tổng cộng năm XXXX** — tổng của tất cả 12 
 
 #### 12.3.2. Chốt Sổ Tháng Thủ Công
 
-Hệ thống tự động chốt sổ vào ngày 1 mỗi tháng lúc nửa đêm. Nếu cần chốt thủ công:
+Hệ thống **không tự động chốt sổ**. Cuối mỗi tháng, bạn cần chốt sổ thủ công như sau:
 
 **Bước 1:** Tìm tháng có trạng thái **"Chưa chốt sổ"**
 

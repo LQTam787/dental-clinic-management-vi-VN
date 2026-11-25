@@ -41,8 +41,8 @@ import com.dentalclinic.repository.MonthlyRevenueRepository;
  *
  * <p>
  * <strong>Monthly reset mechanics:</strong> "Reset to zero on day 1" does
- * NOT delete data. The scheduled job (or manual endpoint) takes a snapshot of
- * the previous month's total and writes it to {@code monthly_revenue}. The
+ * NOT delete data. Finalization is manual only (triggered from the Revenue & Tax tab via
+ * the finalize endpoint) and takes a snapshot of the month's total and writes it to {@code monthly_revenue}. The
  * live monthly total is always re-computed from the {@code appointments} table,
  * so it reflects any retroactive edits. The finalized snapshot is immutable.
  */
